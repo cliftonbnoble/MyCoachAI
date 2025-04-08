@@ -1,6 +1,7 @@
 import React from 'react';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 import { BsPinAngleFill, BsDot, BsCalendarDate } from 'react-icons/bs'; // Import icons
+import roboAgentLogo from '../assets/robo-agent-logo.png'; // Import the image
 
 const ChatInterface = () => {
   // Placeholder messages
@@ -13,7 +14,7 @@ const ChatInterface = () => {
     {
       id: 2,
       sender: 'ai',
-      icon: '/images/robo-agent-logo.png',
+      icon: roboAgentLogo, // Use the imported variable for the icon source
       content: [
         { type: 'intro', text: "Great question! Here's a general timeline and document list for undergraduate financial aid in the US:" },
         { type: 'title', text: 'Timeline:' },
@@ -88,7 +89,7 @@ const ChatInterface = () => {
         <div className="space-y-4">
           <div className="flex items-center mb-4">
               <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">MyCoach</span>
-              <img src="/images/robo-agent-logo.png" alt="MyCoach Logo" className="w-6 h-6" />
+              <img src={roboAgentLogo} alt="MyCoach Logo" className="w-9 h-9" />
           </div>
           {messages.map((message) => (
             <div

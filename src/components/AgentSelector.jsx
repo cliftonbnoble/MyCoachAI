@@ -31,7 +31,7 @@ const AgentSelector = () => {
          // Restore the original agent item structure and styling
         <div key={agent.id} className="group flex flex-col items-center text-center flex-shrink-0 w-18 cursor-pointer">
           <img
-            src="/images/robo-agent-logo.png"
+            src={agent.avatar}
             alt={agent.specialty}
             className="w-14 h-14 rounded-full mb-1 shadow-sm group-hover:shadow-md transition-all duration-200 ease-in-out group-hover:scale-105"
           />

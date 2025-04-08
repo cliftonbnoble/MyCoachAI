@@ -59,8 +59,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           {/* Chat History Title */} 
           <h3 className="text-sm font-semibold mb-3 text-light-text dark:text-dark-text flex-shrink-0">Chat History</h3>
 
-          {/* Chat History List - Added overflow-y-auto */} 
-          <div className="flex-grow overflow-y-auto mb-4 pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+          {/* Chat History List - Replace specific scrollbar classes with the custom one */}
+          <div className="flex-grow overflow-y-auto mb-4 pr-1 custom-scrollbar">
             <ul>
               {chatHistory.map((chat) => (
                 <li key={chat.id} className="mb-1.5">

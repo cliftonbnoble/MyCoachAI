@@ -23,9 +23,14 @@ const AgentSelector = () => {
     { id: 8, specialty: 'Admin Agent', avatar: agent8 },
   ];
 
+  // Log the path of the first agent's avatar to check its format
+  if (agents.length > 0) {
+    console.log('[AgentSelector] Imported agent1 avatar path:', agents[0].avatar);
+  }
+
   return (
-    // Restore the original horizontal scrolling flex container
-    <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide py-2 mb-2">
+    // Add custom-scrollbar class for consistent styling
+    <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide py-2 mb-2 custom-scrollbar">
       <span className="text-sm font-semibold text-light-text dark:text-dark-text whitespace-nowrap flex-shrink-0 pl-1">Our Agents:</span>
       {agents.map(agent => (
          // Restore the original agent item structure and styling

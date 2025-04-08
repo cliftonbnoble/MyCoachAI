@@ -4,6 +4,10 @@ import { BsPinAngleFill, BsDot, BsCalendarDate } from 'react-icons/bs'; // Impor
 import roboAgentLogo from '../assets/robo-agent-logo.png'; // Import the image
 
 const ChatInterface = () => {
+  // --- LOGGING ADDED ---
+  console.log('[ChatInterface] Imported roboAgentLogo path:', roboAgentLogo);
+  // --- END LOGGING ---
+
   // Placeholder messages
   const messages = [
     {

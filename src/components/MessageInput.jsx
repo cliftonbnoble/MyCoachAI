@@ -34,7 +34,7 @@ const MessageInput = () => {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder="Ask me anything..."
-          className="flex-1 px-2 py-1 resize-none bg-transparent outline-none text-light-text dark:text-dark-text placeholder-gray-400 dark:placeholder-gray-500"
+          className="flex-1 px-2 py-1 resize-none bg-transparent outline-none text-light-text dark:text-dark-text placeholder-gray-400 dark:placeholder-gray-500 custom-scrollbar"
           style={{ maxHeight: '100px', overflowY: 'auto' }} // Limit height and allow scroll
         />
         <button className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 mr-2">

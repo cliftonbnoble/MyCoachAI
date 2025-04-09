@@ -7,28 +7,33 @@ const ThemeToggle = () => {
   const isDark = theme === 'dark';
 
   return (
-    // Container now just holds the button, width will be set in Sidebar
-    <div className="flex items-center justify-center">
-      <button
-        onClick={toggleTheme}
-        className={`relative p-2 rounded-full transition-colors duration-300 ease-in-out overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-dark-surface ${isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'
+    // Increase vertical padding (e.g., p-1.5)
+    <button
+      onClick={toggleTheme}
+      className={`relative flex items-center w-full p-1.5 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-dark-surface ${isDark ? 'bg-gray-700' : 'bg-gray-100'
+        }`}
+      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+    >
+      {/* Sliding Knob - should adjust height automatically */}
+      <span
+        className={`absolute top-0 bottom-0 left-0 w-1/2 rounded-full bg-primary transition-transform duration-300 ease-in-out transform ${isDark ? 'translate-x-full' : 'translate-x-0'
           }`}
-        aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
-      >
-        {/* Sun Icon - visible in light mode */}
+      ></span>
+
+      {/* Increase icon size */}
+      <div className="relative z-10 flex justify-between w-full px-2"> 
         <FiSun
-          size={18}
-          className={`transition-opacity duration-300 ease-in-out ${isDark ? 'opacity-0' : 'opacity-100 text-yellow-500'
+          size={22} // Increased size
+          className={`transition-colors duration-300 ${isDark ? 'text-yellow-500' : 'text-gray-900'
             }`}
         />
-        {/* Moon Icon - visible in dark mode, positioned absolutely over the sun */}
         <FiMoon
-          size={18}
-          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 ease-in-out ${isDark ? 'opacity-100 text-primary' : 'opacity-0'
+          size={22} // Increased size
+          className={`transition-colors duration-300 ${isDark ? 'text-gray-900' : 'text-gray-400'
             }`}
         />
-      </button>
-    </div>
+      </div>
+    </button>
   );
 };
 

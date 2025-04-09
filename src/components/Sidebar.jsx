@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiSun, FiMoon, FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus } from 'react-icons/fi';
+import { FiSun, FiMoon, FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders } from 'react-icons/fi';
 import ThemeToggle from './ThemeToggle.jsx';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -87,13 +87,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             {isPopupOpen && (
               <div
                 ref={popupRef}
-                className="absolute left-0 top-full mt-2 w-56 rounded-md shadow-lg bg-light-surface dark:bg-dark-surface ring-1 ring-black dark:ring-gray-700 ring-opacity-5 focus:outline-none z-20"
+                className="absolute left-0 top-full mt-2 w-56 rounded-md shadow-lg bg-light-surface dark:bg-dark-surface ring-1 ring-black dark:ring-gray-600 ring-opacity-5 focus:outline-none z-20"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="user-menu-button"
               >
                 <div className="py-1" role="none">
-                  {/* Example Menu Items */}
+                  {/* Added Customize Profile Item */}
+                  <a
+                    href="#" // Replace with actual link
+                    className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
+                    role="menuitem"
+                  >
+                    <FiSliders className="mr-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
+                    <span>Customize Profile</span>
+                  </a>
                   <a
                     href="#" // Replace with actual link
                     className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -145,8 +153,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
           {/* Theme Toggle - Wrapped to control width */}
           <div className="mt-auto flex-shrink-0 flex justify-center">
-            {/* Adjust width (e.g., w-16, w-20) as needed */}
-            <div className="w-16">
+            {/* Adjust width (e.g., w-20, w-24) as needed */}
+            {/* Increased width slightly for pill shape */}
+            <div className="w-24">
               <ThemeToggle />
             </div>
           </div>

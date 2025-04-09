@@ -24,24 +24,25 @@ const AgentSelector = () => {
   ];
 
   return (
-    // Add custom-scrollbar class for consistent styling
-    <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide py-2 mb-2 custom-scrollbar">
-      <span className="text-sm font-semibold text-light-text dark:text-dark-text whitespace-nowrap flex-shrink-0 pl-1">Our Agents:</span>
-      {agents.map(agent => (
-         // Restore the original agent item structure and styling
-        <div key={agent.id} className="group flex flex-col items-center text-center flex-shrink-0 w-18 cursor-pointer">
-          <img
-            src={agent.avatar}
-            alt={agent.specialty}
-            className="w-14 h-14 rounded-full mb-1 shadow-sm group-hover:shadow-md transition-all duration-200 ease-in-out group-hover:scale-105"
-          />
-          <span
-            className="text-[10px] text-light-text dark:text-dark-text mt-0.5 transition-transform duration-200 ease-in-out group-hover:scale-105 whitespace-nowrap"
-          >
-            {agent.specialty}
-          </span>
-        </div>
-      ))}
+    // Modify outer div to center its content
+    <div className="flex justify-center w-full mb-2">
+      {/* Add inner container for scrolling */}
+      <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide py-2 custom-scrollbar max-w-full px-4">
+        {agents.map(agent => (
+          <div key={agent.id} className="group flex flex-col items-center text-center flex-shrink-0 w-18 cursor-pointer">
+            <img
+              src={agent.avatar}
+              alt={agent.specialty}
+              className="w-14 h-14 rounded-full mb-1 shadow-sm group-hover:shadow-md transition-all duration-200 ease-in-out group-hover:scale-105"
+            />
+            <span
+              className="text-[10px] text-light-text dark:text-dark-text mt-0.5 transition-transform duration-200 ease-in-out group-hover:scale-105 whitespace-nowrap"
+            >
+              {agent.specialty}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

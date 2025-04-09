@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button"; // shadcn button
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,8 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils"; // Utility for combining class names
-import { FiLink, FiFolder } from 'react-icons/fi';
+import { cn } from "@/lib/utils";
+// Removed unused FiLink, FiFolder
+// Import active brand icons
+import { SiLinkedin, SiDropbox } from 'react-icons/si';
+import { FaGoogleDrive } from 'react-icons/fa';
+import { ImOnedrive } from 'react-icons/im';
 
 // Accept open state and setter function as props
 const CustomizeProfileModal = ({ isOpen, onOpenChange }) => {
@@ -39,6 +43,9 @@ const CustomizeProfileModal = ({ isOpen, onOpenChange }) => {
     onOpenChange(false); // Close the dialog on save
   };
 
+  // Updated focus style: remove border/ring, add opaque glow
+  const inputFocusStyle = "focus:outline-none focus:border-transparent focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:shadow-[inset_0_0_1px_2px_#FACC15] transition-shadow duration-150";
+
   return (
     // Use the controlled version of Dialog
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -62,41 +69,41 @@ const CustomizeProfileModal = ({ isOpen, onOpenChange }) => {
               <h4 className="font-semibold text-lg border-b pb-2 mb-0">Basic Information</h4>
               <div className="grid gap-1.5">
                 <Label htmlFor="nickname">Nickname</Label>
-                <Input id="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="What should MyCoach call you?" />
+                <Input id="nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="What should MyCoach call you?" className={cn(inputFocusStyle)} />
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="major">Major/Field</Label>
-                <Input id="major" value={major} onChange={(e) => setMajor(e.target.value)} placeholder="e.g., Computer Science, Nursing, Undecided" />
+                <Input id="major" value={major} onChange={(e) => setMajor(e.target.value)} placeholder="e.g., Computer Science, Nursing, Undecided" className={cn(inputFocusStyle)} />
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="year">Year</Label>
-                <Input id="year" value={year} onChange={(e) => setYear(e.target.value)} placeholder="e.g., Freshman, Sophomore, Graduate Student" />
+                <Input id="year" value={year} onChange={(e) => setYear(e.target.value)} placeholder="e.g., Freshman, Sophomore, Graduate Student" className={cn(inputFocusStyle)} />
               </div>
 
               {/* --- Academic/Personal Info --- */}
               <h4 className="font-semibold text-lg border-b pb-2 mt-4 mb-0">Academic & Personal Details</h4>
               <div className="grid gap-1.5">
                 <Label htmlFor="careerGoals">Career Goals</Label>
-                <Textarea id="careerGoals" value={careerGoals} onChange={(e) => setCareerGoals(e.target.value)} placeholder="What are your aspirations after college?" className="min-h-[80px]" />
+                <Textarea id="careerGoals" value={careerGoals} onChange={(e) => setCareerGoals(e.target.value)} placeholder="What are your aspirations after college?" className={cn("min-h-[80px]", inputFocusStyle)} />
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="studyHabits">Study Habits</Label>
-                <Textarea id="studyHabits" value={studyHabits} onChange={(e) => setStudyHabits(e.target.value)} placeholder="How do you typically study? (e.g., prefer groups, quiet spaces, specific times)" className="min-h-[80px]" />
+                <Textarea id="studyHabits" value={studyHabits} onChange={(e) => setStudyHabits(e.target.value)} placeholder="How do you typically study? (e.g., prefer groups, quiet spaces, specific times)" className={cn("min-h-[80px]", inputFocusStyle)} />
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="learningStyle">Learning Style</Label>
-                <Textarea id="learningStyle" value={learningStyle} onChange={(e) => setLearningStyle(e.target.value)} placeholder="How do you learn best? (e.g., visual aids, hands-on, lectures, reading)" className="min-h-[80px]" />
+                <Textarea id="learningStyle" value={learningStyle} onChange={(e) => setLearningStyle(e.target.value)} placeholder="How do you learn best? (e.g., visual aids, hands-on, lectures, reading)" className={cn("min-h-[80px]", inputFocusStyle)} />
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="interests">Interests</Label>
-                <Textarea id="interests" value={interests} onChange={(e) => setInterests(e.target.value)} placeholder="Any hobbies or subjects you're passionate about outside of your major?" className="min-h-[80px]" />
+                <Textarea id="interests" value={interests} onChange={(e) => setInterests(e.target.value)} placeholder="Any hobbies or subjects you're passionate about outside of your major?" className={cn("min-h-[80px]", inputFocusStyle)} />
               </div>
 
               {/* --- External Links --- */}
               <h4 className="font-semibold text-lg border-b pb-2 mt-4 mb-0">External Links</h4>
               <div className="grid gap-1.5">
                 <Label htmlFor="linkedin" className="flex items-center gap-2">
-                   <FiLink className="text-gray-500 dark:text-gray-400" size={16}/>
+                   <SiLinkedin className="text-gray-500 dark:text-gray-400" size={20}/>
                    LinkedIn Profile URL
                 </Label>
                 <Input
@@ -104,21 +111,22 @@ const CustomizeProfileModal = ({ isOpen, onOpenChange }) => {
                   value={linkedInUrl}
                   onChange={(e) => setLinkedInUrl(e.target.value)}
                   placeholder="https://linkedin.com/in/yourprofile"
+                  className={cn(inputFocusStyle)}
                 />
               </div>
               <div className="grid gap-1.5">
                  <Label>Link File Services</Label>
                  <div className="flex flex-wrap gap-3 items-center">
                    <Button variant="outline" size="sm" className="flex items-center gap-2">
-                       <FiFolder size={16} className="text-gray-500 dark:text-gray-400"/>
+                       <FaGoogleDrive size={20} className="text-gray-500 dark:text-gray-400"/>
                        Link Google Drive
                    </Button>
                    <Button variant="outline" size="sm" className="flex items-center gap-2">
-                       <FiFolder size={16} className="text-gray-500 dark:text-gray-400"/>
+                       <SiDropbox size={20} className="text-gray-500 dark:text-gray-400"/>
                        Link Dropbox
                    </Button>
                     <Button variant="outline" size="sm" className="flex items-center gap-2">
-                       <FiFolder size={16} className="text-gray-500 dark:text-gray-400"/>
+                       <ImOnedrive size={20} className="text-gray-500 dark:text-gray-400"/>
                        Link OneDrive
                    </Button>
                  </div>

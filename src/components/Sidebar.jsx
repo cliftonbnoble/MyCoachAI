@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiSun, FiMoon, FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders } from 'react-icons/fi';
+import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders } from 'react-icons/fi';
 import ThemeToggle from './ThemeToggle.jsx';
 import CustomizeProfileModal from './CustomizeProfileModal.jsx';
 
@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
     { id: 8, title: 'Academic Support' },
     { id: 9, title: 'Campus Map' },
     { id: 10, title: 'Library Hours' },
-    // Add more history items
+    // TODO: Populate with real or more dynamic history
   ];
 
   // Close popup when clicking outside
@@ -36,10 +36,8 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
         setIsProfilePopupOpen(false);
       }
     }
-    // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [popupRef, profileRef]);
@@ -66,12 +64,11 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
       <div
         className={`bg-light-surface dark:bg-dark-surface flex flex-col shadow-md transition-all duration-300 ease-in-out flex-shrink-0 ${isOpen ? 'w-64' : 'w-0 overflow-hidden'}`}
       >
-        {/* Wrap content in a div that handles padding and visibility */} 
+        {/* Wrap content in a div that handles padding and visibility */}
         <div className={`flex flex-col h-full ${isOpen ? 'p-4' : 'p-0'} transition-opacity duration-100 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
 
           {/* --- Modified Header Area --- */}
           <div className="relative flex justify-between items-center mb-6 flex-shrink-0">
-            {/* Profile Button */} 
             <button
               ref={profileRef}
               onClick={() => setIsProfilePopupOpen(!isProfilePopupOpen)}
@@ -83,7 +80,6 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
               <span className="font-semibold text-light-text dark:text-dark-text whitespace-nowrap">John Doe</span>
             </button>
 
-            {/* Collapse Button */} 
             <button
               onClick={toggleSidebar}
               className="text-light-text dark:text-dark-text hover:text-gray-500 dark:hover:text-gray-400 ml-2"
@@ -91,7 +87,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
               <FiChevronsLeft size={20} />
             </button>
 
-            {/* Profile Popup Menu */} 
+            {/* Profile Popup Menu */}
             {isProfilePopupOpen && (
               <div
                 ref={popupRef}
@@ -101,7 +97,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
                 aria-labelledby="user-menu-button"
               >
                 <div className="py-1" role="none">
-                  {/* Changed Customize Profile to a button */} 
+                  {/* Changed Customize Profile to a button */}
                   <button
                     onClick={handleOpenCustomizeModal}
                     className="w-full flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600 text-left"
@@ -111,7 +107,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
                     <span>Customize Profile</span>
                   </button>
                   <a
-                    href="#" // Replace with actual link
+                    href="#" // TODO: Replace with actual settings link
                     className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
                     role="menuitem"
                   >
@@ -119,7 +115,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
                     <span>Settings</span>
                   </a>
                   <a
-                    href="#" // Replace with actual link
+                    href="#" // TODO: Replace with actual logout link/action
                     className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
                     role="menuitem"
                   >
@@ -133,7 +129,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
           {/* --- End Modified Header Area --- */}
 
           {/* --- New Chat Button - Added onClick handler --- */}
-          <button 
+          <button
             onClick={onNewChat} // Call the handler passed from Layout
             className="flex items-center w-full p-2 mb-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
             <FiPlus size={22} className="mr-3 text-primary" />
@@ -141,16 +137,15 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
           </button>
           {/* --- End New Chat Button --- */}
 
-          {/* Chat History Title */} 
           <h3 className="text-sm font-semibold mb-3 text-light-text dark:text-dark-text flex-shrink-0">Chat History</h3>
 
-          {/* Chat History List - Replace specific scrollbar classes with the custom one */}
+          {/* Chat History List - Uses custom scrollbar */} 
           <div className="flex-grow overflow-y-auto mb-4 pr-1 custom-scrollbar">
             <ul>
               {chatHistory.map((chat) => (
                 <li key={chat.id} className="mb-1.5">
                   <a
-                    href="#" // Replace with actual chat link later
+                    href="#" // TODO: Replace with actual chat link later
                     className="flex items-center p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-sm text-light-text dark:text-dark-text whitespace-nowrap"
                   >
                     <FiMessageCircle size={16} className="mr-2 flex-shrink-0" />
@@ -163,13 +158,12 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
 
           {/* Theme Toggle - Wrapped to control width */}
           <div className="mt-auto flex-shrink-0 flex justify-center">
-            {/* Adjust width (e.g., w-20, w-24) as needed */}
             {/* Increased width slightly for pill shape */}
             <div className="w-24">
               <ThemeToggle />
             </div>
           </div>
-        </div> 
+        </div>
       </div>
 
       {/* Standalone Toggle Button - Visible only when closed on larger screens */}
@@ -183,7 +177,6 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
         </button>
       )}
 
-      {/* Render the Customize Profile Modal */}
       <CustomizeProfileModal 
         isOpen={isCustomizeModalOpen} 
         onOpenChange={setIsCustomizeModalOpen} 

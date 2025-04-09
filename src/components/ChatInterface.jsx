@@ -3,8 +3,6 @@ import { FiEdit, FiBookOpen, FiDollarSign, FiCalendar, FiClipboard, FiHelpCircle
 import roboAgentLogo from '../assets/robo-agent-logo.png';
 import MessageInput from './MessageInput.jsx';
 
-const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-
 const ChatInterface = ({ 
   messages,
   hasChatStarted,
@@ -36,7 +34,7 @@ const ChatInterface = ({
             <img
               src={roboAgentLogo}
               alt="MyCoach Logo"
-              className="w-16 h-16 mb-6 rounded-lg shadow-md bg-gray-200 dark:bg-gray-700 p-2 mx-auto"
+              className="w-24 h-24 mb-6 rounded-lg shadow-md bg-gray-200 dark:bg-gray-700 p-2 mx-auto"
             />
             <h1 className="text-2xl font-semibold mb-1 text-light-text dark:text-dark-text">
               Welcome Back, {userName}!

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Sidebar from './Sidebar.jsx';
 import MainContent from './MainContent.jsx';
 import roboAgentLogo from '../assets/robo-agent-logo.png'; // Need logo for AI messages
@@ -45,9 +45,9 @@ const Layout = () => {
   };
 
   const handleNewChat = () => {
-      setMessages([]); // Clear messages
-      setHasChatStarted(false); // Reset to splash screen state
-      setIsAiTyping(false); // Ensure typing indicator is off
+      setMessages([]);
+      setHasChatStarted(false);
+      setIsAiTyping(false);
       // Optionally close sidebar if desired
       // if (isSidebarOpen) { toggleSidebar(); }
   };

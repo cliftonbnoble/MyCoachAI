@@ -1,13 +1,8 @@
 import React from 'react';
-import { SparklesIcon } from '@heroicons/react/24/outline';
 import { BsPinAngleFill, BsDot, BsCalendarDate } from 'react-icons/bs'; // Import icons
 import roboAgentLogo from '../assets/robo-agent-logo.png'; // Import the image
 
 const ChatInterface = () => {
-  // --- LOGGING ADDED ---
-  console.log('[ChatInterface] Imported roboAgentLogo path:', roboAgentLogo);
-  // --- END LOGGING ---
-
   // Placeholder messages
   const messages = [
     {
@@ -40,8 +35,6 @@ const ChatInterface = () => {
       ]
     },
   ];
-
-  const initialPromptVisible = false; // We have initial messages, so don't show the prompt
 
   const renderAiMessageContent = (content) => {
     return content.map((item, index) => {
@@ -79,44 +72,31 @@ const ChatInterface = () => {
 
   return (
     <div className="flex-1 overflow-y-auto mb-4 p-4 bg-light-surface dark:bg-dark-surface rounded-lg shadow flex flex-col custom-scrollbar">
-      {initialPromptVisible && (
-        <div className="flex flex-col items-center justify-center text-center flex-grow">
-          <div className="w-16 h-16 mb-4 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-white">
-             <div className="w-12 h-12 rounded-full bg-white opacity-50"></div>
-          </div>
-          <h3 className="text-lg font-semibold mb-2 text-light-text dark:text-dark-text">Need help planning the perfect event?</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Get expert tips on budgeting, guest management, and themes to make your event unforgettable!</p>
+      <div className="space-y-4">
+        <div className="flex items-center mb-4">
+          <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">MyCoach</span>
+          <img src={roboAgentLogo} alt="MyCoach Logo" className="w-9 h-9" />
         </div>
-      )}
-
-      {!initialPromptVisible && (
-        <div className="space-y-4">
-          <div className="flex items-center mb-4">
-              <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">MyCoach</span>
-              <img src={roboAgentLogo} alt="MyCoach Logo" className="w-9 h-9" />
-          </div>
-          {messages.map((message) => (
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex items-end gap-2 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            {message.sender === 'ai' && message.icon && (
+              <img src={message.icon} alt="AI Agent" className="w-8 h-8 rounded-full" />
+            )}
             <div
-              key={message.id}
-              className={`flex items-end gap-2 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`max-w-lg p-3 shadow-sm ${message.sender === 'user'
+                ? 'bg-primary text-gray-900 rounded-t-lg rounded-bl-lg'
+                : 'bg-gray-200 dark:bg-gray-700 text-light-text dark:text-dark-text rounded-t-lg rounded-br-lg'
+              }`}
             >
-              {message.sender === 'ai' && message.icon && (
-                <img src={message.icon} alt="AI Agent" className="w-8 h-8 rounded-full" />
-              )}
-              <div
-                 className={`max-w-lg p-3 shadow-sm ${message.sender === 'user'
-                    ? 'bg-primary text-gray-900 rounded-t-lg rounded-bl-lg'
-                    : 'bg-gray-200 dark:bg-gray-700 text-light-text dark:text-dark-text rounded-t-lg rounded-br-lg'
-                 }`
-                 }
-              >
-                {message.sender === 'ai' ? renderAiMessageContent(message.content) : message.text}
-              </div>
-              {message.sender === 'user' && <div className="w-8"></div>}
+              {message.sender === 'ai' ? renderAiMessageContent(message.content) : message.text}
             </div>
-          ))}
-        </div>
-      )}
+            {message.sender === 'user' && <div className="w-8"></div>}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

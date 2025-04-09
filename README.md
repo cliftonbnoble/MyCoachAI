@@ -1,130 +1,104 @@
-# MyCoach AI - Full Stack Agent Chat Application
+# MyCoach AI - Agent Chat Frontend
 
-This project combines a React frontend with a Python/FastAPI backend to create an AI agent chat interface. It utilizes Supabase for the primary database and Chroma for vector storage and retrieval.
+This project is the React frontend for the MyCoach AI agent chat interface, built with Vite and styled using Tailwind CSS.
 
-## Project Structure
+_(Note: While a backend (FastAPI, Supabase, Chroma) is planned, this repository currently only contains the frontend code.)_
+
+## Project Structure (Frontend)
 
 ```
 /
-├── frontend/          # React frontend (Vite + Tailwind CSS)
-│   ├── public/
-│   ├── src/           # Source files (components, context, etc.)
-│   ├── .eslintrc.cjs
-│   ├── .gitignore
-│   ├── index.html
-│   ├── package.json
-│   ├── postcss.config.js
-│   └── tailwind.config.js
-├── backend/           # FastAPI backend
-│   ├── app/           # Core application logic
-│   │   ├── api/         # API endpoints/routers (e.g., v1)
-│   │   ├── core/        # Configuration, core settings
-│   │   ├── crud/        # Database interaction (CRUD operations)
-│   │   ├── db/          # Database clients (Supabase, Chroma)
-│   │   ├── models/      # Pydantic models
-│   │   ├── schemas/     # Database schemas (if distinct from models)
-│   │   ├── services/    # Business logic
-│   │   └── main.py      # FastAPI app entry point
-│   ├── tests/         # Backend tests
-│   ├── .env.example   # Example environment variables
-│   ├── .gitignore
-│   ├── requirements.txt # Python dependencies
-│   └── README.md      # Optional backend-specific README
-├── docker-compose.yml # Optional: For running services (e.g., Chroma)
-└── README.md          # This file - Main project README
+├── dist/            # Build output directory (Generated, ignored by Git)
+├── node_modules/    # Project dependencies (Ignored by Git)
+├── public/          # Optional: Static assets served from root (e.g., favicon)
+├── src/             # Source files
+│   ├── assets/      # Images and other static assets processed by Vite
+│   ├── components/  # UI Components (ChatInterface, Sidebar, etc.)
+│   ├── context/     # React Context (e.g., ThemeContext)
+│   ├── App.jsx      # Main App component
+│   ├── index.css    # Main CSS file (Tailwind imports, custom styles)
+│   └── main.jsx     # React entry point
+├── .eslintrc.cjs    # ESLint configuration
+├── .gitignore       # Specifies intentionally untracked files
+├── index.html       # HTML entry point
+├── package.json     # Project metadata and dependencies
+├── postcss.config.js# PostCSS config for Tailwind
+├── README.md        # This file
+└── tailwind.config.js # Tailwind CSS config
 ```
 
 ## Prerequisites
 
 - Node.js (v18 or later recommended)
 - npm or yarn
-- Python (3.10 or later recommended)
-- pip
-- Docker (Optional, for running dependencies like Chroma locally)
 
-## Getting Started
+## Getting Started (Frontend)
 
 1.  **Clone the repository:**
 
     ```bash
-    git clone <repository-url>
-    cd mycoach-ai
+    git clone https://github.com/cliftonbnoble/MyCoachAI.git
+    cd MyCoachAI # Corrected directory name
     ```
 
-2.  **Setup Frontend:**
+2.  **Install dependencies:**
 
     ```bash
-    cd frontend
-    npm install # or yarn install
-    # Create a .env file if needed based on frontend requirements
-    cd ..
+    npm install
+    # or
+    yarn install
     ```
 
-3.  **Setup Backend:**
+3.  **Run the development server:**
 
     ```bash
-    cd backend
-    python -m venv venv
-    source venv/bin/activate # On Windows use `venv\Scripts\activate`
-    pip install -r requirements.txt
-    cp .env.example .env
-    # Update .env with your Supabase credentials, Chroma settings, etc.
-    cd ..
+    npm run dev
     ```
 
-4.  **(Optional) Start Services with Docker:**
-    If using `docker-compose.yml` for Chroma or other services:
+    The application will usually be available at `http://localhost:5173`.
 
+4.  **Build for Production:**
     ```bash
-    docker-compose up -d
+    npm run build
     ```
+    This generates the static files in the `dist` directory, ready for deployment.
 
-5.  **Run Development Servers:**
-    - **Frontend:**
-      ```bash
-      cd frontend
-      npm run dev
-      ```
-    - **Backend:**
-      ```bash
-      cd backend
-      source venv/bin/activate # If needed
-      uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-      ```
+## Deployment (Cloudflare Pages)
 
-The frontend will typically be available at `http://localhost:5173` and the backend at `http://localhost:8000`.
+This project is configured for deployment via Cloudflare Pages using Git integration:
+
+1.  Connect your Git repository (GitHub/GitLab) to Cloudflare Pages.
+2.  Configure the build settings:
+    - **Framework preset:** Vite
+    - **Build command:** `npm run build`
+    - **Build output directory:** `dist`
+    - **Root directory:** `/` (or leave blank)
+    - Ensure the **Production branch** is set correctly (e.g., `main`).
+3.  Pushing changes to the configured production branch will automatically trigger a new build and deployment on Cloudflare.
 
 ## Key Features
 
-### Frontend
-
 - **React + Vite:** Fast development and build process.
-- **Tailwind CSS:** Utility-first CSS framework.
+- **Tailwind CSS:** Utility-first CSS framework for rapid UI development.
 - **Dark/Light Mode:** Theme toggling with local storage persistence.
-- **Component-Based Structure:** Modular and reusable UI components.
+- **Component-Based Structure:** Organized into reusable components.
+- **Dynamic Image Handling:** Images are imported within `src` for correct path handling during build.
+- **Custom Scrollbars:** Consistent scrollbar styling across components.
 
-### Backend
+## Tech Stack (Frontend)
 
-- **Python + FastAPI:** Modern, fast web framework for building APIs.
-- **Supabase:** PostgreSQL database with auth and real-time capabilities.
-- **Chroma:** Vector database for similarity search and RAG.
-- **Pydantic:** Data validation and settings management.
+- **Framework/Library:** React
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS
+- **Icons:** React Icons, Heroicons
+- **State Management:** React Context (for Theme)
+- **Deployment:** Cloudflare Pages
 
-## Tech Stack
+## Further Development (Potential)
 
-- **Frontend:** React, Vite, Tailwind CSS
-- **Backend:** Python, FastAPI
-- **Database:** Supabase (PostgreSQL)
-- **Vector Store:** Chroma
-- **Deployment:** AWS (e.g., ECS, Lambda, S3, CloudFront)
-
-## Further Development
-
-- Implement core chat logic connecting frontend and backend.
-- Develop agent creation and management features.
-- Integrate Chroma for retrieval-augmented generation (RAG).
-- Implement user authentication (leveraging Supabase Auth).
-- Define API routes and data models (Pydantic).
-- Set up database migrations (if needed beyond Supabase Studio).
-- Add comprehensive tests (frontend and backend).
-- Establish CI/CD pipelines.
+- Implement actual chat logic (connecting to a backend API).
+- Add state management for messages, agent selection, and chat history.
+- Integrate with backend services (FastAPI, Supabase, Chroma as previously planned).
+- Implement user authentication.
+- Add routing if multiple pages/views are needed.
+- Add comprehensive tests.

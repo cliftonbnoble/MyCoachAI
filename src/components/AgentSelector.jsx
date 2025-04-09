@@ -23,11 +23,6 @@ const AgentSelector = () => {
     { id: 8, specialty: 'Admin Agent', avatar: agent8 },
   ];
 
-  // Log the path of the first agent's avatar to check its format
-  if (agents.length > 0) {
-    console.log('[AgentSelector] Imported agent1 avatar path:', agents[0].avatar);
-  }
-
   return (
     // Add custom-scrollbar class for consistent styling
     <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide py-2 mb-2 custom-scrollbar">

@@ -1,6 +1,6 @@
 # MyCoach AI - Agent Chat Frontend
 
-This project is the React frontend for the MyCoach AI agent chat interface, built with Vite and styled using Tailwind CSS.
+This project is the React frontend for the MyCoach AI agent chat interface, built with Vite. Styling is handled primarily with **Tailwind CSS** and component primitives from **shadcn/ui**.
 
 _(Note: While a backend (FastAPI, Supabase, Chroma) is planned, this repository currently only contains the frontend code.)_
 
@@ -13,18 +13,23 @@ _(Note: While a backend (FastAPI, Supabase, Chroma) is planned, this repository 
 ├── public/          # Optional: Static assets served from root (e.g., favicon)
 ├── src/             # Source files
 │   ├── assets/      # Images and other static assets processed by Vite
-│   ├── components/  # UI Components (ChatInterface, Sidebar, etc.)
+│   ├── components/  # Custom UI Components (ChatInterface, Sidebar, etc.)
+│   │   └── ui/      # shadcn/ui components (e.g., button.jsx)
 │   ├── context/     # React Context (e.g., ThemeContext)
+│   ├── lib/         # Utility functions (e.g., utils.js for cn)
 │   ├── App.jsx      # Main App component
 │   ├── index.css    # Main CSS file (Tailwind imports, custom styles)
 │   └── main.jsx     # React entry point
 ├── .eslintrc.cjs    # ESLint configuration
 ├── .gitignore       # Specifies intentionally untracked files
+├── components.json  # shadcn/ui configuration
 ├── index.html       # HTML entry point
+├── jsconfig.json    # JS path alias configuration
 ├── package.json     # Project metadata and dependencies
 ├── postcss.config.js# PostCSS config for Tailwind
 ├── README.md        # This file
 └── tailwind.config.js # Tailwind CSS config
+└── vite.config.js   # Vite configuration (including path alias)
 ```
 
 ## Prerequisites
@@ -63,6 +68,17 @@ _(Note: While a backend (FastAPI, Supabase, Chroma) is planned, this repository 
     ```
     This generates the static files in the `dist` directory, ready for deployment.
 
+## Adding shadcn/ui Components
+
+Once the project is set up, you can add more components from [shadcn/ui](https://ui.shadcn.com/docs/components) using the CLI:
+
+```bash
+npx shadcn@latest add <component-name>
+# Example: npx shadcn@latest add dialog
+```
+
+This will add the component's source code to `src/components/ui`.
+
 ## Deployment (Cloudflare Pages)
 
 This project is configured for deployment via Cloudflare Pages using Git integration:
@@ -79,17 +95,20 @@ This project is configured for deployment via Cloudflare Pages using Git integra
 ## Key Features
 
 - **React + Vite:** Fast development and build process.
-- **Tailwind CSS:** Utility-first CSS framework for rapid UI development.
-- **Dark/Light Mode:** Theme toggling with local storage persistence.
-- **Component-Based Structure:** Organized into reusable components.
-- **Dynamic Image Handling:** Images are imported within `src` for correct path handling during build.
-- **Custom Scrollbars:** Consistent scrollbar styling across components.
+- **Tailwind CSS + shadcn/ui:** Utility-first styling combined with accessible, unstyled component primitives.
+- **Dark/Light Mode:** Theme toggling powered by CSS variables and React Context.
+- **Component-Based Structure:** Organized into reusable custom and shadcn/ui components.
+- **Dynamic Image Handling:** Images imported within `src` for correct path handling.
+- **Custom Scrollbars:** Consistent scrollbar styling.
+- **Path Aliases:** Uses `@/` for cleaner import paths.
 
 ## Tech Stack (Frontend)
 
 - **Framework/Library:** React
 - **Build Tool:** Vite
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS, shadcn/ui
+- **UI Primitives:** Radix UI (via shadcn/ui)
+- **Class Name Utilities:** `clsx`, `tailwind-merge`
 - **Icons:** React Icons, Heroicons
 - **State Management:** React Context (for Theme)
 - **Deployment:** Cloudflare Pages
@@ -97,6 +116,7 @@ This project is configured for deployment via Cloudflare Pages using Git integra
 ## Further Development (Potential)
 
 - Implement actual chat logic (connecting to a backend API).
+- Utilize more `shadcn/ui` components for UI elements (Dialogs, Forms, etc.).
 - Add state management for messages, agent selection, and chat history.
 - Integrate with backend services (FastAPI, Supabase, Chroma as previously planned).
 - Implement user authentication.

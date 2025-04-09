@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiSun, FiMoon, FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders } from 'react-icons/fi';
 import ThemeToggle from './ThemeToggle.jsx';
+import CustomizeProfileModal from './CustomizeProfileModal.jsx';
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
+  const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
   const popupRef = useRef(null);
   const profileRef = useRef(null);
 
@@ -31,7 +33,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         profileRef.current &&
         !profileRef.current.contains(event.target)
       ) {
-        setIsPopupOpen(false);
+        setIsProfilePopupOpen(false);
       }
     }
     // Bind the event listener
@@ -41,6 +43,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [popupRef, profileRef]);
+
+  // Function to open the customize modal
+  const handleOpenCustomizeModal = () => {
+    setIsProfilePopupOpen(false); // Close the small popup first
+    setIsCustomizeModalOpen(true);
+  };
 
   return (
     <>
@@ -66,7 +74,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             {/* Profile Button */} 
             <button
               ref={profileRef}
-              onClick={() => setIsPopupOpen(!isPopupOpen)}
+              onClick={() => setIsProfilePopupOpen(!isProfilePopupOpen)}
               className="flex items-center group focus:outline-none"
             >
               <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mr-3 group-hover:ring-2 group-hover:ring-primary group-focus:ring-2 group-focus:ring-primary transition-all">
@@ -84,7 +92,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             </button>
 
             {/* Profile Popup Menu */} 
-            {isPopupOpen && (
+            {isProfilePopupOpen && (
               <div
                 ref={popupRef}
                 className="absolute left-0 top-full mt-2 w-56 rounded-md shadow-lg bg-light-surface dark:bg-dark-surface ring-1 ring-black dark:ring-gray-600 ring-opacity-5 focus:outline-none z-20"
@@ -93,15 +101,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 aria-labelledby="user-menu-button"
               >
                 <div className="py-1" role="none">
-                  {/* Added Customize Profile Item */}
-                  <a
-                    href="#" // Replace with actual link
-                    className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
+                  {/* Changed Customize Profile to a button */} 
+                  <button
+                    onClick={handleOpenCustomizeModal}
+                    className="w-full flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600 text-left"
                     role="menuitem"
                   >
                     <FiSliders className="mr-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
                     <span>Customize Profile</span>
-                  </a>
+                  </button>
                   <a
                     href="#" // Replace with actual link
                     className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -124,8 +132,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </div>
           {/* --- End Modified Header Area --- */}
 
-          {/* --- New Chat Button --- */}
-          <button className="flex items-center w-full p-2 mb-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+          {/* --- New Chat Button - Added onClick handler --- */}
+          <button 
+            onClick={onNewChat} // Call the handler passed from Layout
+            className="flex items-center w-full p-2 mb-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
             <FiPlus size={22} className="mr-3 text-primary" />
             <span className="font-medium text-light-text dark:text-dark-text">New Chat</span>
           </button>
@@ -172,6 +182,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <FiChevronsRight size={20} />
         </button>
       )}
+
+      {/* Render the Customize Profile Modal */}
+      <CustomizeProfileModal 
+        isOpen={isCustomizeModalOpen} 
+        onOpenChange={setIsCustomizeModalOpen} 
+      />
     </>
   );
 };

@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { FiEdit, FiBookOpen, FiDollarSign, FiCalendar, FiClipboard, FiHelpCircle } from 'react-icons/fi';
 import roboAgentLogo from '../assets/robo-agent-logo.png';
 import MessageInput from './MessageInput.jsx';
 
 const loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
 
-const ChatInterface = () => {
-  const [hasChatStarted, setHasChatStarted] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [nextId, setNextId] = useState(1);
-  const [isAiTyping, setIsAiTyping] = useState(false);
+const ChatInterface = ({ 
+  messages,
+  hasChatStarted,
+  isAiTyping,
+  handleSendMessage
+}) => {
   const userName = "John";
 
   const examplePrompts = [
@@ -20,31 +21,6 @@ const ChatInterface = () => {
     { text: "Summarize this lecture transcript", icon: FiClipboard },
     { text: "When is the deadline to drop a class?", icon: FiCalendar },
   ];
-
-  const addMessage = (sender, text, icon = null) => {
-    const newMessage = { id: nextId, sender, text, icon };
-    setMessages(prevMessages => [...prevMessages, newMessage]);
-    setNextId(prevId => prevId + 1);
-  };
-
-  const triggerAiResponse = () => {
-    setIsAiTyping(true);
-    setTimeout(() => {
-      addMessage('ai', loremIpsum, roboAgentLogo);
-      setIsAiTyping(false);
-    }, 1000);
-  };
-
-  const handleSendMessage = (text) => {
-    if (!text || text.trim() === '') return;
-
-    if (!hasChatStarted) {
-      setHasChatStarted(true);
-    }
-
-    addMessage('user', text);
-    triggerAiResponse();
-  };
 
   const handleExamplePrompt = (promptText) => {
     handleSendMessage(promptText);

@@ -113,12 +113,30 @@ This project is configured for deployment via Cloudflare Pages using Git integra
 - **State Management:** React Context (for Theme)
 - **Deployment:** Cloudflare Pages
 
-## Further Development (Potential)
+## Future Roadmap & Development
 
-- Implement actual chat logic (connecting to a backend API).
-- Utilize more `shadcn/ui` components for UI elements (Dialogs, Forms, etc.).
-- Add state management for messages, agent selection, and chat history.
-- Integrate with backend services (FastAPI, Supabase, Chroma as previously planned).
-- Implement user authentication.
-- Add routing if multiple pages/views are needed.
-- Add comprehensive tests.
+This project serves as the foundation for a more complex AI coaching application. Key areas for future development include:
+
+- **Core Chat Functionality:**
+
+  - **Backend Integration:** Connect the frontend chat interface to a backend API (e.g., the planned FastAPI backend) to handle message persistence, user sessions, and AI interactions.
+  - **Real-time Communication:** Potentially implement WebSockets for a smoother, real-time chat experience.
+  - **Dynamic Chat History:** Fetch and display actual user chat history in the sidebar, allowing users to resume previous conversations.
+
+- **AI Agent Integration:**
+
+  - **Query Routing to Agents:** Implement logic to analyze user queries and automatically route them to the most appropriate specialized AI agent (e.g., finance agent, academic advisor agent). This approach aims to provide a seamless experience where the user interacts with the system, and the system intelligently directs the query to the correct underlying agent, removing the need for manual agent selection. The existing `AgentSelector` UI may be repurposed or removed based on this design.
+  - **Agent Framework:** Integrate a robust framework for building and managing AI agent interactions and routing logic. **LangChain** remains a strong contender due to its versatility, extensive tooling (including routing capabilities), ecosystem integrations, and community support for building context-aware, reasoning applications.
+  - **Contextual Awareness:** Leverage user profile information and potentially linked file services to provide personalized and context-aware responses from the routed AI agents.
+
+- **Feature Implementation:**
+
+  - **Profile Persistence:** Implement the `handleSave` logic in the "Customize Profile" modal to persist user data via the backend API.
+  - **File Service Integration:** Connect the "Link File Services" buttons (Google Drive, Dropbox, OneDrive) to backend OAuth flows and APIs to allow agents access to relevant user documents (with explicit permission).
+  - **Authentication:** Implement a secure user authentication system.
+  - **Routing:** Introduce client-side routing (e.g., with React Router) if the application expands beyond a single-page interface.
+
+- **Testing & Refinement:**
+  - **Error Handling:** Add more robust error handling and user feedback mechanisms throughout the application.
+  - **Testing:** Implement unit, integration, and potentially end-to-end tests.
+  - **UI/UX Polish:** Continuously refine the user interface and experience based on testing and feedback.

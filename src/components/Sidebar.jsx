@@ -1,16 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders } from 'react-icons/fi';
+import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders, FiUsers } from 'react-icons/fi';
 import ThemeToggle from './ThemeToggle.jsx';
 import CustomizeProfileModal from './CustomizeProfileModal.jsx';
+import { useNavigate } from 'react-router-dom';
 
-const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
+/**
+ * Sidebar component for both student and staff portals
+ */
+const Sidebar = ({ 
+  isOpen, 
+  toggleSidebar, 
+  onNewChat, 
+  portalType = 'student', 
+  userName = 'John Doe',
+  userType = 'Student',
+  onStudentSearch
+}) => {
+  // State for profile popup and customize modal
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
+  
+  // Refs for click outside detection
   const popupRef = useRef(null);
   const profileRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Placeholder for chat history items
-  const chatHistory = [
+  // Portal-specific chat history items
+  const chatHistory = portalType === 'student' ? [
     { id: 1, title: 'Financial Aid Inquiry' },
     { id: 2, title: 'Dormitory Reservation' },
     { id: 3, title: 'Course Registration' },
@@ -21,7 +37,17 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
     { id: 8, title: 'Academic Support' },
     { id: 9, title: 'Campus Map' },
     { id: 10, title: 'Library Hours' },
-    // TODO: Populate with real or more dynamic history
+  ] : [
+    { id: 1, title: 'Student Records' },
+    { id: 2, title: 'Course Management' },
+    { id: 3, title: 'Faculty Directory' },
+    { id: 4, title: 'Enrollment Statistics' },
+    { id: 5, title: 'Academic Calendar' },
+    { id: 6, title: 'Department Budgets' },
+    { id: 7, title: 'Campus Resources' },
+    { id: 8, title: 'Student Services' },
+    { id: 9, title: 'IT Support' },
+    { id: 10, title: 'Administrative Tasks' },
   ];
 
   // Close popup when clicking outside
@@ -42,15 +68,15 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
     };
   }, [popupRef, profileRef]);
 
-  // Function to open the customize modal
+  // Open customize modal and close profile popup
   const handleOpenCustomizeModal = () => {
-    setIsProfilePopupOpen(false); // Close the small popup first
+    setIsProfilePopupOpen(false);
     setIsCustomizeModalOpen(true);
   };
 
   return (
     <>
-      {/* Overlay for mobile/smaller screens when sidebar is open & collapsed */}
+      {/* Mobile toggle button - shown when sidebar is closed */}
       {!isOpen && (
         <button
           onClick={toggleSidebar}
@@ -67,7 +93,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
         {/* Wrap content in a div that handles padding and visibility */}
         <div className={`flex flex-col h-full ${isOpen ? 'p-4' : 'p-0'} transition-opacity duration-100 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
 
-          {/* --- Modified Header Area --- */}
+          {/* Header with User Profile */}
           <div className="relative flex justify-between items-center mb-6 flex-shrink-0">
             <button
               ref={profileRef}
@@ -77,7 +103,14 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
               <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mr-3 group-hover:ring-2 group-hover:ring-primary group-focus:ring-2 group-focus:ring-primary transition-all">
                 <FiUser size={20} className="text-gray-600 dark:text-gray-300" />
               </div>
-              <span className="font-semibold text-light-text dark:text-dark-text whitespace-nowrap">John Doe</span>
+              <div className="flex flex-col">
+                <span className="font-semibold text-light-text dark:text-dark-text whitespace-nowrap">
+                  {userName}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {userType}
+                </span>
+              </div>
             </button>
 
             <button
@@ -97,7 +130,6 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
                 aria-labelledby="user-menu-button"
               >
                 <div className="py-1" role="none">
-                  {/* Changed Customize Profile to a button */}
                   <button
                     onClick={handleOpenCustomizeModal}
                     className="w-full flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600 text-left"
@@ -107,7 +139,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
                     <span>Customize Profile</span>
                   </button>
                   <a
-                    href="#" // TODO: Replace with actual settings link
+                    href="#"
                     className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
                     role="menuitem"
                   >
@@ -115,7 +147,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
                     <span>Settings</span>
                   </a>
                   <a
-                    href="#" // TODO: Replace with actual logout link/action
+                    href="#"
                     className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
                     role="menuitem"
                   >
@@ -126,26 +158,43 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
               </div>
             )}
           </div>
-          {/* --- End Modified Header Area --- */}
 
-          {/* --- New Chat Button - Added onClick handler --- */}
-          <button
-            onClick={onNewChat} // Call the handler passed from Layout
-            className="flex items-center w-full p-2 mb-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-            <FiPlus size={22} className="mr-3 text-primary" />
-            <span className="font-medium text-light-text dark:text-dark-text">New Chat</span>
-          </button>
-          {/* --- End New Chat Button --- */}
+          {/* New Chat Button */}
+          <div className="px-4 mb-4 mt-6">
+            <button 
+              onClick={onNewChat}
+              className="flex items-center justify-center w-full py-3 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-light-text dark:text-dark-text rounded-lg transition-colors shadow-sm"
+            >
+              <FiPlus size={20} className={`text-primary ${!isOpen && 'mx-auto'}`} />
+              {isOpen && <span className="ml-3 font-medium">New Chat</span>}
+            </button>
+          </div>
 
-          <h3 className="text-sm font-semibold mb-3 text-light-text dark:text-dark-text flex-shrink-0">Chat History</h3>
+          {/* Student Search Button - Staff Only */}
+          {portalType === 'staff' && (
+            <div className="px-4 mb-4">
+              <button 
+                onClick={onStudentSearch}
+                className="flex items-center justify-center w-full py-3 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-light-text dark:text-dark-text rounded-lg transition-colors shadow-sm"
+              >
+                <FiUsers size={20} className={`text-primary ${!isOpen && 'mx-auto'}`} />
+                {isOpen && <span className="ml-3 font-medium">Student Search</span>}
+              </button>
+            </div>
+          )}
 
-          {/* Chat History List - Uses custom scrollbar */} 
+          {/* History Header */}
+          <h3 className="text-sm font-semibold mb-3 text-light-text dark:text-dark-text flex-shrink-0">
+            {portalType === 'student' ? 'Chat History' : 'Staff Resources'}
+          </h3>
+
+          {/* Chat History List */} 
           <div className="flex-grow overflow-y-auto mb-4 pr-1 custom-scrollbar">
             <ul>
               {chatHistory.map((chat) => (
                 <li key={chat.id} className="mb-1.5">
                   <a
-                    href="#" // TODO: Replace with actual chat link later
+                    href="#"
                     className="flex items-center p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-sm text-light-text dark:text-dark-text whitespace-nowrap"
                   >
                     <FiMessageCircle size={16} className="mr-2 flex-shrink-0" />
@@ -156,9 +205,8 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
             </ul>
           </div>
 
-          {/* Theme Toggle - Wrapped to control width */}
+          {/* Theme Toggle */}
           <div className="mt-auto flex-shrink-0 flex justify-center">
-            {/* Increased width slightly for pill shape */}
             <div className="w-24">
               <ThemeToggle />
             </div>
@@ -166,7 +214,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
         </div>
       </div>
 
-      {/* Standalone Toggle Button - Visible only when closed on larger screens */}
+      {/* Standalone Toggle Button - Desktop Only */}
       {!isOpen && (
         <button
           onClick={toggleSidebar}
@@ -177,6 +225,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onNewChat }) => {
         </button>
       )}
 
+      {/* Customize Profile Modal */}
       <CustomizeProfileModal 
         isOpen={isCustomizeModalOpen} 
         onOpenChange={setIsCustomizeModalOpen} 

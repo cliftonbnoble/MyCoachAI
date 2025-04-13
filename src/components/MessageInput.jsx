@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { FiPlusCircle, FiRefreshCcw, FiSend } from 'react-icons/fi';
 
-const MessageInput = ({ onSendMessage }) => {
+const MessageInput = ({ onSendMessage, portalType = 'student' }) => {
   const [message, setMessage] = useState('');
+
+  // Different placeholder text based on portal type
+  const placeholderText = portalType === 'student' 
+    ? "Ask me anything about your classes, assignments, or campus life..." 
+    : "Ask me anything about student records, administrative tasks, or resources...";
 
   const handleSend = () => {
     const trimmedMessage = message.trim();
@@ -23,7 +28,7 @@ const MessageInput = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="mt-auto p-4 bg-light-surface dark:bg-dark-surface rounded-lg shadow">
+    <div className="mt-auto px-3 py-3 bg-light-surface dark:bg-dark-surface rounded-lg shadow w-full">
       <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg p-2">
         <button className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
           <FiPlusCircle size={20} />
@@ -33,7 +38,7 @@ const MessageInput = ({ onSendMessage }) => {
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder="Ask me anything..."
+          placeholder={placeholderText}
           className="flex-1 px-2 py-1 resize-none bg-transparent outline-none text-light-text dark:text-dark-text placeholder-gray-400 dark:placeholder-gray-500 custom-scrollbar"
           style={{ maxHeight: '100px', overflowY: 'auto' }}
         />

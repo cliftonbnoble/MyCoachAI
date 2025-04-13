@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiEdit, FiBookOpen, FiDollarSign, FiCalendar, FiClipboard, FiHelpCircle } from 'react-icons/fi';
+import { FiEdit, FiBookOpen, FiDollarSign, FiCalendar, FiClipboard, FiHelpCircle, FiUsers, FiFileText, FiDatabase, FiSettings } from 'react-icons/fi';
 import roboAgentLogo from '../assets/robo-agent-logo.png';
 import MessageInput from './MessageInput.jsx';
 
@@ -7,17 +7,27 @@ const ChatInterface = ({
   messages,
   hasChatStarted,
   isAiTyping,
-  handleSendMessage
+  handleSendMessage,
+  portalType = 'student'
 }) => {
-  const userName = "John";
+  // Get user name based on portal type
+  const userName = portalType === 'student' ? "John" : "Jane";
 
-  const examplePrompts = [
+  // Different prompts based on portal type
+  const examplePrompts = portalType === 'student' ? [
     { text: "Create flashcards for my Biology exam", icon: FiBookOpen },
     { text: "Help me budget for next semester", icon: FiDollarSign },
     { text: "Explain the concept of photosynthesis", icon: FiHelpCircle },
     { text: "Draft an email to my professor", icon: FiEdit },
     { text: "Summarize this lecture transcript", icon: FiClipboard },
     { text: "When is the deadline to drop a class?", icon: FiCalendar },
+  ] : [
+    { text: "Draft an email to a student's parents", icon: FiEdit },
+    { text: "Generate a report on class attendance", icon: FiFileText },
+    { text: "Review department budget forecast", icon: FiDollarSign },
+    { text: "Prepare meeting notes for faculty meeting", icon: FiClipboard },
+    { text: "Query student enrollment statistics", icon: FiDatabase },
+    { text: "Configure course schedule for next term", icon: FiSettings },
   ];
 
   const handleExamplePrompt = (promptText) => {
@@ -25,7 +35,7 @@ const ChatInterface = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden w-full">
       <div className="flex-1 flex flex-col overflow-hidden relative">
         <div
           className={`absolute inset-0 flex flex-col items-center justify-center text-center transition-opacity duration-500 ease-in-out p-4 ${hasChatStarted ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
@@ -40,10 +50,12 @@ const ChatInterface = ({
               Welcome Back, {userName}!
             </h1>
             <h2 className="text-xl text-gray-600 dark:text-gray-400">
-              How can I assist you today?
+              {portalType === 'student' 
+                ? "How can I assist with your studies today?" 
+                : "How can I assist with your administrative tasks today?"}
             </h2>
           </div>
-          <div className="w-full max-w-2xl px-4">
+          <div className="w-full px-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {examplePrompts.map((prompt, index) => (
                 <button
@@ -60,13 +72,15 @@ const ChatInterface = ({
         </div>
 
         <div
-          className={`flex-1 overflow-y-auto mb-0 p-4 bg-light-surface dark:bg-dark-surface rounded-lg shadow custom-scrollbar flex flex-col transition-opacity duration-500 ease-in-out ${hasChatStarted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`flex-1 overflow-y-auto p-3 bg-light-surface dark:bg-dark-surface rounded-lg shadow custom-scrollbar flex flex-col transition-opacity duration-500 ease-in-out ${hasChatStarted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
-          <div className="space-y-4">
+          <div className="space-y-4 w-full">
             {hasChatStarted && (
               <div className="flex items-center mb-4">
-                <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">MyCoach</span>
-                <img src={roboAgentLogo} alt="MyCoach Logo" className="w-9 h-9" />
+                <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">
+                  {portalType === 'student' ? 'MyCoach' : 'StaffAssist'}
+                </span>
+                <img src={roboAgentLogo} alt="AI Logo" className="w-9 h-9" />
               </div>
             )}
             {messages.map((message) => (
@@ -104,7 +118,7 @@ const ChatInterface = ({
         </div>
       </div>
 
-      <MessageInput onSendMessage={handleSendMessage} />
+      <MessageInput onSendMessage={handleSendMessage} portalType={portalType} />
     </div>
   );
 };

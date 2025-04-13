@@ -76,10 +76,24 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "spin": {
+          to: { transform: "rotate(360deg)" },
+        },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        "fade-out": {
+          from: { opacity: "1" },
+          to: { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "spin-slow": "spin 20s linear infinite",
+        "fade-in": "fade-in 0.5s ease-out",
+        "fade-out": "fade-out 0.3s ease-out",
       },
     },
   },

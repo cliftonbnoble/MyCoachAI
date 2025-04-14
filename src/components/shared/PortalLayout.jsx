@@ -27,7 +27,8 @@ const PortalLayout = ({
     { id: 2, text: 'Finish Resume/CV for job application.', icon: FiBriefcase },
     { id: 3, text: 'Turn in transcripts by Nov 15th.', icon: FiFileText },
   ]);
-  const notificationCount = notifications.length; // Count based on current notifications
+  const notificationCount = notifications.length;
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
 
   // Notification Handlers
   const handleAcceptNotification = (id) => {
@@ -36,6 +37,10 @@ const PortalLayout = ({
 
   const handleRejectNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const handleToggleNotificationPanel = () => {
+    setIsNotificationPanelOpen(prev => !prev);
   };
 
   // Sidebar toggle handler
@@ -99,9 +104,11 @@ const PortalLayout = ({
         onNewChat={handleNewChat}
         portalType={portalType}
         onStudentSearch={handleToggleStudentSearch}
-        notifications={notifications} // Pass notifications state
-        onAcceptNotification={handleAcceptNotification} // Pass accept handler
-        onRejectNotification={handleRejectNotification} // Pass reject handler
+        notifications={notifications}
+        onAcceptNotification={handleAcceptNotification}
+        onRejectNotification={handleRejectNotification}
+        isNotificationPanelOpen={isNotificationPanelOpen}
+        onToggleNotificationPanel={handleToggleNotificationPanel}
         {...sidebarConfig}
       />
       
@@ -124,8 +131,9 @@ const PortalLayout = ({
                 isAiTyping={isAiTyping}
                 handleSendMessage={handleSendMessage}
                 portalType={portalType}
-                logoImage={logoImage} // Pass logo image for badge context
-                notificationCount={notificationCount} // Pass notification count
+                logoImage={logoImage}
+                notificationCount={notificationCount}
+                onToggleNotificationPanel={handleToggleNotificationPanel}
               />
             </>
           )}

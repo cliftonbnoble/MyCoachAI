@@ -10,7 +10,8 @@ const ChatInterface = ({
   handleSendMessage,
   portalType = 'student',
   logoImage,
-  notificationCount = 0
+  notificationCount = 0,
+  onToggleNotificationPanel
 }) => {
   // Get user name based on portal type
   const userName = portalType === 'student' ? "John" : "Jane";
@@ -43,7 +44,12 @@ const ChatInterface = ({
           className={`absolute inset-0 flex flex-col items-center justify-center text-center transition-opacity duration-500 ease-in-out p-4 ${hasChatStarted ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         >
           <div className="mb-8">
-            <div className="relative inline-block mx-auto">
+            <button 
+              onClick={onToggleNotificationPanel}
+              disabled={notificationCount === 0}
+              className={`relative inline-block mx-auto rounded-lg focus:outline-none ${notificationCount > 0 ? 'cursor-pointer focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-light-surface dark:focus:ring-offset-dark-bg' : 'cursor-default'}`}
+              aria-label={notificationCount > 0 ? `Open Notifications (${notificationCount})` : 'No new notifications'}
+            >
               <img
                 src={roboAgentLogo}
                 alt="MyCoach Logo"
@@ -54,7 +60,7 @@ const ChatInterface = ({
                   {notificationCount}
                 </span>
               )}
-            </div>
+            </button>
             <h1 className="text-2xl font-semibold mb-1 text-light-text dark:text-dark-text">
               Welcome Back, {userName}!
             </h1>

@@ -17,13 +17,14 @@ const Sidebar = ({
   onStudentSearch,
   notifications = [],
   onAcceptNotification,
-  onRejectNotification
+  onRejectNotification,
+  isNotificationPanelOpen,
+  onToggleNotificationPanel
 }) => {
   // State for profile popup and customize modal
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
   const [isPurposeBuilderModalOpen, setIsPurposeBuilderModalOpen] = useState(false);
-  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
   
   // Notification state removed - use props instead
   const hasUnreadNotifications = notifications.length > 0;
@@ -88,12 +89,6 @@ const Sidebar = ({
     setIsPurposeBuilderModalOpen(true);
   };
 
-  // Toggle notification panel
-  const handleToggleNotificationPanel = () => {
-    setIsNotificationPanelOpen(!isNotificationPanelOpen);
-    // Note: Marking as read might be handled differently now, potentially in parent or upon accept/reject
-  };
-
   return (
     <>
       {/* Mobile toggle button - shown when sidebar is closed */}
@@ -138,7 +133,7 @@ const Sidebar = ({
 
             {/* Notification Bell Button */}
             <button 
-              onClick={handleToggleNotificationPanel}
+              onClick={onToggleNotificationPanel}
               className="relative p-2 rounded-full text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-light-surface dark:focus:ring-offset-dark-surface focus:ring-primary mr-2 transition-transform duration-200 ease-in-out hover:scale-110"
               aria-label="Notifications"
             >
@@ -275,7 +270,7 @@ const Sidebar = ({
       {/* Persistent Notification Bell when closed and has notifications */}
       {!isOpen && hasUnreadNotifications && (
         <button
-          onClick={handleToggleNotificationPanel}
+          onClick={onToggleNotificationPanel}
           className="fixed top-16 left-2 z-10 p-2 bg-light-surface dark:bg-dark-surface rounded-full text-primary shadow-lg transition-transform duration-200 ease-in-out hover:scale-110" 
           title="Notifications" 
           aria-label="Notifications"
@@ -306,7 +301,7 @@ const Sidebar = ({
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-light-text dark:text-dark-text">Notifications</h2>
               <button 
-                onClick={() => setIsNotificationPanelOpen(false)}
+                onClick={onToggleNotificationPanel}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

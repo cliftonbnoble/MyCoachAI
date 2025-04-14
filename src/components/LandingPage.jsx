@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import roboAgentLogo from '../assets/robo-agent-logo.png';
+import largeRoboLogo from '../assets/large-robo-logo.png';
 import { FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 
 const LandingPage = () => {
@@ -18,13 +19,13 @@ const LandingPage = () => {
       {/* Hero Section with Background Logo */}
       <header className="pt-10 px-4 sm:px-6 lg:px-8 mb-16 md:mb-24 relative overflow-hidden">
         {/* Large background logo */}
-        <div className="absolute right-0 top-0 w-full h-full flex justify-end items-center opacity-5 dark:opacity-10 pointer-events-none overflow-hidden">
+        <div className="absolute right-0 top-0 w-full h-full flex justify-end items-center opacity-15 dark:opacity-20 pointer-events-none overflow-hidden">
           <img 
-            src={roboAgentLogo} 
+            src={largeRoboLogo} 
             alt="" 
-            className="w-[120%] max-w-none absolute -right-[10%] top-1/2 transform -translate-y-1/2"
+            className="w-[80%] max-w-none absolute -right-[5%] top-[35%] transform -translate-y-1/2"
             aria-hidden="true"
-            style={{ minWidth: '800px' }}
+            style={{ minWidth: '600px' }}
           />
         </div>
         
@@ -64,9 +65,15 @@ const LandingPage = () => {
             
             {/* Right side animated effect replacing the image box */}
             <div className="lg:w-1/2 flex justify-center mb-10 lg:mb-0 mt-16 lg:mt-0">
-              <div className="relative w-64 h-64">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary to-purple-600 rounded-full blur-3xl opacity-30 animate-pulse"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-full animate-spin-slow"></div>
+              <div className="w-32 h-32 relative">
+                <div 
+                  className="w-full h-full rounded-full animate-pulse"
+                  style={{ 
+                    animationDuration: '3s',
+                    background: 'rgba(250, 204, 21, 1)',
+                    boxShadow: '0 0 60px 30px rgba(250, 204, 21, 0.7), 0 0 100px 60px rgba(250, 204, 21, 0.4), 0 0 140px 90px rgba(250, 204, 21, 0.1)'
+                  }}
+                ></div>
               </div>
             </div>
           </div>
@@ -104,13 +111,13 @@ const LandingPage = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <Link
-              to="/student"
+            <button
               className="px-8 py-4 bg-primary hover:bg-yellow-400 text-lg font-semibold text-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out flex items-center justify-center gap-2 group"
+              onClick={() => {}}
             >
               Get Started Now
               <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </button>
           </div>
         </div>
       </section>

@@ -58,12 +58,12 @@ const StudentSearch = ({ onClose }) => {
     const fetchStudentData = async () => {
       try {
         const endpoints = {
-          general: 'http://18.117.12.198:5001/api/general',
-          demographic: 'http://18.117.12.198:5001/api/demographic',
-          health: 'http://18.117.12.198:5001/api/health',
-          financial: 'http://18.117.12.198:5001/api/financial',
-          career: 'http://18.117.12.198:5001/api/career',
-          academic: 'http://18.117.12.198:5001/api/academic'
+          general: 'https://api.stonecreekforms.link/api/general',
+          demographic: 'https://api.stonecreekforms.link/api/demographic',
+          health: 'https://api.stonecreekforms.link/api/health',
+          financial: 'https://api.stonecreekforms.link/api/financial',
+          career: 'https://api.stonecreekforms.link/api/career',
+          academic: 'https://api.stonecreekforms.link/api/academic'
         };
 
         // Fetch data from all endpoints for student details

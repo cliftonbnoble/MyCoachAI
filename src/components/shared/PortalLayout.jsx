@@ -3,6 +3,7 @@ import Sidebar from '../Sidebar.jsx';
 import ChatInterface from '../ChatInterface.jsx';
 import AgentSelector from '../AgentSelector.jsx';
 import StudentSearch from '../student-search/StudentSearch.jsx';
+import { FiDollarSign, FiBriefcase, FiFileText } from 'react-icons/fi'; // Import icons for notifications
 
 const PortalLayout = ({ 
   portalType = 'student', // 'student' or 'staff'
@@ -19,6 +20,23 @@ const PortalLayout = ({
   const [messages, setMessages] = useState([]); 
   const [nextId, setNextId] = useState(1); 
   const [isAiTyping, setIsAiTyping] = useState(false);
+
+  // Notification State (Lifted)
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: 'Turn in financial aid application by Oct 31st.', icon: FiDollarSign },
+    { id: 2, text: 'Finish Resume/CV for job application.', icon: FiBriefcase },
+    { id: 3, text: 'Turn in transcripts by Nov 15th.', icon: FiFileText },
+  ]);
+  const notificationCount = notifications.length; // Count based on current notifications
+
+  // Notification Handlers
+  const handleAcceptNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const handleRejectNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
 
   // Sidebar toggle handler
   const toggleSidebar = () => {
@@ -81,6 +99,9 @@ const PortalLayout = ({
         onNewChat={handleNewChat}
         portalType={portalType}
         onStudentSearch={handleToggleStudentSearch}
+        notifications={notifications} // Pass notifications state
+        onAcceptNotification={handleAcceptNotification} // Pass accept handler
+        onRejectNotification={handleRejectNotification} // Pass reject handler
         {...sidebarConfig}
       />
       
@@ -103,6 +124,8 @@ const PortalLayout = ({
                 isAiTyping={isAiTyping}
                 handleSendMessage={handleSendMessage}
                 portalType={portalType}
+                logoImage={logoImage} // Pass logo image for badge context
+                notificationCount={notificationCount} // Pass notification count
               />
             </>
           )}

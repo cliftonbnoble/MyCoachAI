@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders, FiUsers } from 'react-icons/fi';
+import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders, FiUsers, FiTarget, FiBell, FiDollarSign, FiBriefcase, FiFileText, FiCheck, FiX } from 'react-icons/fi';
 import ThemeToggle from './ThemeToggle.jsx';
 import CustomizeProfileModal from './CustomizeProfileModal.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -14,11 +14,19 @@ const Sidebar = ({
   portalType = 'student', 
   userName = 'John Doe',
   userType = 'Student',
-  onStudentSearch
+  onStudentSearch,
+  notifications = [],
+  onAcceptNotification,
+  onRejectNotification
 }) => {
   // State for profile popup and customize modal
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
+  const [isPurposeBuilderModalOpen, setIsPurposeBuilderModalOpen] = useState(false);
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+  
+  // Notification state removed - use props instead
+  const hasUnreadNotifications = notifications.length > 0;
   
   // Refs for click outside detection
   const popupRef = useRef(null);
@@ -74,6 +82,18 @@ const Sidebar = ({
     setIsCustomizeModalOpen(true);
   };
 
+  // Open purpose builder modal and close profile popup
+  const handleOpenPurposeBuilderModal = () => {
+    setIsProfilePopupOpen(false);
+    setIsPurposeBuilderModalOpen(true);
+  };
+
+  // Toggle notification panel
+  const handleToggleNotificationPanel = () => {
+    setIsNotificationPanelOpen(!isNotificationPanelOpen);
+    // Note: Marking as read might be handled differently now, potentially in parent or upon accept/reject
+  };
+
   return (
     <>
       {/* Mobile toggle button - shown when sidebar is closed */}
@@ -93,29 +113,45 @@ const Sidebar = ({
         {/* Wrap content in a div that handles padding and visibility */}
         <div className={`flex flex-col h-full ${isOpen ? 'p-4' : 'p-0'} transition-opacity duration-100 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
 
-          {/* Header with User Profile */}
+          {/* Header with User Profile & Notifications */}
           <div className="relative flex justify-between items-center mb-6 flex-shrink-0">
+            {/* Profile Button */}
             <button
               ref={profileRef}
               onClick={() => setIsProfilePopupOpen(!isProfilePopupOpen)}
-              className="flex items-center group focus:outline-none"
+              className="flex items-center group focus:outline-none flex-grow mr-2 overflow-hidden p-1"
             >
-              <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mr-3 group-hover:ring-2 group-hover:ring-primary group-focus:ring-2 group-focus:ring-primary transition-all">
+              {/* User Icon */}
+              <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mr-3 flex-shrink-0 group-hover:ring-2 group-hover:ring-primary group-focus:ring-2 group-focus:ring-primary transition-all">
                 <FiUser size={20} className="text-gray-600 dark:text-gray-300" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-semibold text-light-text dark:text-dark-text whitespace-nowrap">
+              {/* User Name & Type (truncated) */}
+              <div className="flex flex-col overflow-hidden">
+                <span className="font-semibold text-light-text dark:text-dark-text whitespace-nowrap truncate">
                   {userName}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
                   {userType}
                 </span>
               </div>
             </button>
 
+            {/* Notification Bell Button */}
+            <button 
+              onClick={handleToggleNotificationPanel}
+              className="relative p-2 rounded-full text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-light-surface dark:focus:ring-offset-dark-surface focus:ring-primary mr-2 transition-transform duration-200 ease-in-out hover:scale-110"
+              aria-label="Notifications"
+            >
+              <FiBell size={22} className="text-primary" />
+              {hasUnreadNotifications && (
+                <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-light-surface dark:ring-dark-surface" />
+              )}
+            </button>
+
+            {/* Sidebar Toggle Button */}
             <button
               onClick={toggleSidebar}
-              className="text-light-text dark:text-dark-text hover:text-gray-500 dark:hover:text-gray-400 ml-2"
+              className="text-light-text dark:text-dark-text hover:text-gray-500 dark:hover:text-gray-400 flex-shrink-0"
             >
               <FiChevronsLeft size={20} />
             </button>
@@ -146,6 +182,17 @@ const Sidebar = ({
                     <FiSettings className="mr-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
                     <span>Settings</span>
                   </a>
+                  {/* Purpose Builder - Student Only */}
+                  {portalType === 'student' && (
+                    <button
+                      onClick={handleOpenPurposeBuilderModal}
+                      className="w-full flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600 text-left"
+                      role="menuitem"
+                    >
+                      <FiTarget className="mr-3 h-5 w-5 text-gray-500 dark:text-gray-400" />
+                      <span>Purpose Builder</span>
+                    </button>
+                  )}
                   <a
                     href="#"
                     className="flex items-center px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -225,13 +272,264 @@ const Sidebar = ({
         </button>
       )}
 
+      {/* Persistent Notification Bell when closed and has notifications */}
+      {!isOpen && hasUnreadNotifications && (
+        <button
+          onClick={handleToggleNotificationPanel}
+          className="fixed top-16 left-2 z-10 p-2 bg-light-surface dark:bg-dark-surface rounded-full text-primary shadow-lg transition-transform duration-200 ease-in-out hover:scale-110" 
+          title="Notifications" 
+          aria-label="Notifications"
+        >
+          <FiBell size={22} />
+          <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800" /> 
+        </button>
+      )}
+
       {/* Customize Profile Modal */}
-      <CustomizeProfileModal 
-        isOpen={isCustomizeModalOpen} 
-        onOpenChange={setIsCustomizeModalOpen} 
+      {isCustomizeModalOpen && (
+        <CustomizeProfileModal 
+          isOpen={isCustomizeModalOpen} 
+          onClose={() => setIsCustomizeModalOpen(false)} 
+        />
+      )}
+
+      {/* Purpose Builder Modal */}
+      <PurposeBuilderModal 
+        isOpen={isPurposeBuilderModalOpen} 
+        onClose={() => setIsPurposeBuilderModalOpen(false)} 
       />
+
+      {/* Notification Panel Modal */}
+      {isNotificationPanelOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl w-full max-w-md p-6 transform transition-all opacity-100 scale-100">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-light-text dark:text-dark-text">Notifications</h2>
+              <button 
+                onClick={() => setIsNotificationPanelOpen(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="max-h-96 overflow-y-auto custom-scrollbar pr-2">
+              {notifications.length > 0 ? (
+                <ul className="space-y-3">
+                  {notifications.map((notification) => {
+                    const IconComponent = notification.icon;
+                    return (
+                      <li key={notification.id} className="flex items-start justify-between p-3 rounded-md bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600">
+                        <div className="flex items-start flex-grow mr-2">
+                          <div className="flex-shrink-0 w-6 h-6 mt-0.5 mr-3 flex items-center justify-center text-primary">
+                            <IconComponent size={18} />
+                          </div>
+                          <span className="text-sm text-light-text dark:text-dark-text">
+                            {notification.text}
+                          </span>
+                        </div>
+                        <div className="flex flex-shrink-0 space-x-1.5 mt-0.5">
+                          <button 
+                            onClick={() => onAcceptNotification(notification.id)}
+                            className="p-1 rounded-full text-green-500 hover:bg-green-100 dark:hover:bg-green-900/50 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            aria-label="Accept"
+                            title="Accept"
+                          >
+                            <FiCheck size={16} />
+                          </button>
+                          <button 
+                            onClick={() => onRejectNotification(notification.id)}
+                            className="p-1 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 focus:outline-none focus:ring-2 focus:ring-red-500"
+                            aria-label="Reject"
+                            title="Reject"
+                          >
+                            <FiX size={16} />
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className="text-sm text-center text-light-text-secondary dark:text-dark-text-secondary py-4">
+                  No new notifications.
+                </p>
+              )}
+            </div>
+            {/* Optional: Add 'Mark all as read' or other actions here */}
+          </div>
+        </div>
+      )}
     </>
   );
 };
+
+// --- PurposeBuilderModal Component Definition ---
+const PurposeBuilderModal = ({ isOpen, onClose }) => {
+  const [year, setYear] = useState('');
+  const [major, setMajor] = useState('');
+  const [goals, setGoals] = useState('');
+  const [interests, setInterests] = useState('');
+  const [challenges, setChallenges] = useState('');
+  const [areasOfFocus, setAreasOfFocus] = useState({
+    academic: false,
+    career: false,
+    personal: false,
+    financial: false,
+  });
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setAreasOfFocus(prev => ({ ...prev, [name]: checked }));
+  };
+
+  const handleSave = () => {
+    // Placeholder for save logic
+    console.log({ year, major, goals, interests, challenges, areasOfFocus });
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+      <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl w-full max-w-3xl p-8 transform transition-all scale-100 opacity-100 flex flex-col max-h-[90vh]">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+          <h2 className="text-2xl font-semibold text-light-text dark:text-dark-text">Purpose Builder</h2>
+          <button 
+            onClick={onClose}
+            className="p-1 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
+            aria-label="Close"
+          >
+            <FiX size={24} />
+          </button>
+        </div>
+
+        {/* Form Content - Scrollable */}
+        <div className="flex-grow overflow-y-auto custom-scrollbar px-8 space-y-8 mb-6">
+          {/* Year and Major */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-1">
+              <label htmlFor="year" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Year</label>
+              <div className="relative">
+                <select 
+                  id="year" 
+                  value={year} 
+                  onChange={(e) => setYear(e.target.value)}
+                  className="w-full pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:outline-none focus:border-primary appearance-none"
+                >
+                  <option value="" disabled>Select your year</option>
+                  <option value="freshman">Freshman</option>
+                  <option value="sophomore">Sophomore</option>
+                  <option value="junior">Junior</option>
+                  <option value="senior">Senior</option>
+                  <option value="graduate">Graduate</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-400">
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                </div>
+              </div>
+            </div>
+            <div className="p-1">
+              <label htmlFor="major" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Major</label>
+              <div className="relative">
+                <select 
+                  id="major" 
+                  value={major} 
+                  onChange={(e) => setMajor(e.target.value)}
+                  className="w-full pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:outline-none focus:border-primary appearance-none"
+                >
+                  <option value="" disabled>Select your major</option>
+                  <option value="computer_science">Computer Science</option>
+                  <option value="business">Business</option>
+                  <option value="psychology">Psychology</option>
+                  <option value="biology">Biology</option>
+                  <option value="engineering">Engineering</option>
+                  <option value="undecided">Undecided</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-400">
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Text Areas */}
+          <div className="p-1">
+            <label htmlFor="goals" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">What are your main goals for this academic year?</label>
+            <textarea 
+              id="goals" 
+              rows="3" 
+              value={goals} 
+              onChange={(e) => setGoals(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:outline-none focus:border-primary"
+              placeholder="e.g., achieve a 3.5 GPA, find an internship, join a student club..."
+            />
+          </div>
+          <div className="p-1">
+            <label htmlFor="interests" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">What topics or activities are you passionate about?</label>
+            <textarea 
+              id="interests" 
+              rows="3" 
+              value={interests} 
+              onChange={(e) => setInterests(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:outline-none focus:border-primary"
+              placeholder="e.g., programming, volunteering, creative writing, sports..."
+            />
+          </div>
+          <div className="p-1">
+            <label htmlFor="challenges" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">What challenges do you anticipate or currently face?</label>
+            <textarea 
+              id="challenges" 
+              rows="3" 
+              value={challenges} 
+              onChange={(e) => setChallenges(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:outline-none focus:border-primary"
+              placeholder="e.g., time management, difficult coursework, financial concerns..."
+            />
+          </div>
+
+          {/* Areas of Focus */}
+          <div className="p-1">
+            <label className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-3">Select your primary areas of focus:</label>
+            <div className="grid grid-cols-2 gap-4">
+              {Object.keys(areasOfFocus).map((area) => (
+                <label key={area} className="flex items-center space-x-2 cursor-pointer p-1">
+                  <input 
+                    type="checkbox" 
+                    name={area} 
+                    checked={areasOfFocus[area]} 
+                    onChange={handleCheckboxChange}
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                  />
+                  <span className="text-sm text-light-text dark:text-dark-text capitalize">{area}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Buttons */}
+        <div className="flex justify-end space-x-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+          <button 
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-light-text dark:text-dark-text rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:focus:ring-offset-dark-surface transition-colors"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={handleSave}
+            className="px-4 py-2 bg-primary text-gray-900 rounded-md hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-dark-surface transition-colors"
+          >
+            Save Purpose
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+// --- End PurposeBuilderModal Definition ---
 
 export default Sidebar; 

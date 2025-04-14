@@ -8,7 +8,9 @@ const ChatInterface = ({
   hasChatStarted,
   isAiTyping,
   handleSendMessage,
-  portalType = 'student'
+  portalType = 'student',
+  logoImage,
+  notificationCount = 0
 }) => {
   // Get user name based on portal type
   const userName = portalType === 'student' ? "John" : "Jane";
@@ -41,11 +43,18 @@ const ChatInterface = ({
           className={`absolute inset-0 flex flex-col items-center justify-center text-center transition-opacity duration-500 ease-in-out p-4 ${hasChatStarted ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         >
           <div className="mb-8">
-            <img
-              src={roboAgentLogo}
-              alt="MyCoach Logo"
-              className="w-24 h-24 mb-6 rounded-lg shadow-md bg-gray-200 dark:bg-gray-700 p-2 mx-auto"
-            />
+            <div className="relative inline-block mx-auto">
+              <img
+                src={roboAgentLogo}
+                alt="MyCoach Logo"
+                className="w-24 h-24 mb-6 rounded-lg shadow-md bg-gray-200 dark:bg-gray-700 p-2"
+              />
+              {notificationCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-sm font-bold text-white ring-2 ring-light-surface dark:ring-dark-bg">
+                  {notificationCount}
+                </span>
+              )}
+            </div>
             <h1 className="text-2xl font-semibold mb-1 text-light-text dark:text-dark-text">
               Welcome Back, {userName}!
             </h1>
@@ -80,7 +89,7 @@ const ChatInterface = ({
                 <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">
                   {portalType === 'student' ? 'MyCoach' : 'StaffAssist'}
                 </span>
-                <img src={roboAgentLogo} alt="AI Logo" className="w-9 h-9" />
+                <img src={logoImage} alt="AI Logo" className="w-9 h-9" />
               </div>
             )}
             {messages.map((message) => (

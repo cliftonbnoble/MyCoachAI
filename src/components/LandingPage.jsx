@@ -65,15 +65,27 @@ const LandingPage = () => {
             
             {/* Right side animated effect replacing the image box */}
             <div className="lg:w-1/2 flex justify-center mb-10 lg:mb-0 mt-16 lg:mt-0">
-              <div className="w-32 h-32 relative">
-                <div 
-                  className="w-full h-full rounded-full animate-pulse"
-                  style={{ 
-                    animationDuration: '3s',
-                    background: 'rgba(250, 204, 21, 1)',
-                    boxShadow: '0 0 60px 30px rgba(250, 204, 21, 0.7), 0 0 100px 60px rgba(250, 204, 21, 0.4), 0 0 140px 90px rgba(250, 204, 21, 0.1)'
-                  }}
-                ></div>
+              {/* Animated Circle */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64">
+                <div className="absolute inset-0 rounded-full animate-pulse" style={{
+                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.2) 0%, rgba(250, 204, 21, 0) 70%)',
+                  animationDuration: '4s'
+                }} />
+                <div className="absolute inset-[15%] rounded-full animate-pulse" style={{
+                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.3) 0%, rgba(250, 204, 21, 0) 70%)',
+                  animationDuration: '3s',
+                  animationDelay: '0.5s'
+                }} />
+                <div className="absolute inset-[30%] rounded-full animate-pulse" style={{
+                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.4) 0%, rgba(250, 204, 21, 0) 70%)',
+                  animationDuration: '2s',
+                  animationDelay: '1s'
+                }} />
+                <div className="absolute inset-[45%] rounded-full animate-pulse" style={{
+                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.5) 0%, rgba(250, 204, 21, 0) 70%)',
+                  animationDuration: '1.5s',
+                  animationDelay: '1.5s'
+                }} />
               </div>
             </div>
           </div>

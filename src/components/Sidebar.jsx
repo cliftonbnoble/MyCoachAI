@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders, FiUsers, FiTarget, FiBell, FiDollarSign, FiBriefcase, FiFileText, FiCheck, FiX } from 'react-icons/fi';
+import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders, FiUsers, FiTarget, FiBell, FiDollarSign, FiBriefcase, FiFileText, FiCheck, FiX, FiMessageSquare } from 'react-icons/fi';
+import { FcComments } from 'react-icons/fc';
 import ThemeToggle from './ThemeToggle.jsx';
 import CustomizeProfileModal from './CustomizeProfileModal.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +20,8 @@ const Sidebar = ({
   onAcceptNotification,
   onRejectNotification,
   isNotificationPanelOpen,
-  onToggleNotificationPanel
+  onToggleNotificationPanel,
+  onDiscussNotification
 }) => {
   // State for profile popup and customize modal
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
@@ -297,66 +299,127 @@ const Sidebar = ({
       {/* Notification Panel Modal */}
       {isNotificationPanelOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl w-full max-w-md p-6 transform transition-all opacity-100 scale-100">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-light-text dark:text-dark-text">Notifications</h2>
+          {/* Increased width: max-w-4xl */}
+          <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl w-full max-w-4xl p-6 transform transition-all opacity-100 scale-100 flex flex-col max-h-[80vh]">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+              <h2 className="text-2xl font-semibold text-light-text dark:text-dark-text">Notifications Center</h2>
               <button 
                 onClick={onToggleNotificationPanel}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <FiX size={24} />
               </button>
             </div>
-            <div className="max-h-96 overflow-y-auto custom-scrollbar pr-2">
+
+            {/* 3-Column Layout for Notifications */}
+            <div className="flex-grow overflow-y-auto custom-scrollbar pr-2">
               {notifications.length > 0 ? (
-                <ul className="space-y-3">
-                  {notifications.map((notification) => {
-                    const IconComponent = notification.icon;
-                    return (
-                      <li key={notification.id} className="flex items-start justify-between p-3 rounded-md bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600">
-                        <div className="flex items-start flex-grow mr-2">
-                          <div className="flex-shrink-0 w-6 h-6 mt-0.5 mr-3 flex items-center justify-center text-primary">
-                            <IconComponent size={18} />
-                          </div>
-                          <span className="text-sm text-light-text dark:text-dark-text">
-                            {notification.text}
-                          </span>
-                        </div>
-                        <div className="flex flex-shrink-0 space-x-1.5 mt-0.5">
-                          <button 
-                            onClick={() => onAcceptNotification(notification.id)}
-                            className="p-1 rounded-full text-green-500 hover:bg-green-100 dark:hover:bg-green-900/50 focus:outline-none focus:ring-2 focus:ring-green-500"
-                            aria-label="Accept"
-                            title="Accept"
-                          >
-                            <FiCheck size={16} />
-                          </button>
-                          <button 
-                            onClick={() => onRejectNotification(notification.id)}
-                            className="p-1 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 focus:outline-none focus:ring-2 focus:ring-red-500"
-                            aria-label="Reject"
-                            title="Reject"
-                          >
-                            <FiX size={16} />
-                          </button>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Column 1: Reminders */}
+                  <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 text-orange-700 dark:text-orange-300 border-b border-orange-200 dark:border-orange-700 pb-2">Reminders</h3>
+                    <ul className="space-y-3">
+                      {notifications.filter(n => n.category === 'reminder').map((notification) => (
+                        <NotificationItem key={notification.id} notification={notification} onDiscuss={onDiscussNotification} onAccept={onAcceptNotification} onReject={onRejectNotification} />
+                      ))}
+                      {notifications.filter(n => n.category === 'reminder').length === 0 && (
+                        <p className="text-sm text-center text-orange-600 dark:text-orange-400 py-4 italic">No reminders.</p>
+                      )}
+                    </ul>
+                  </div>
+
+                  {/* Column 2: Recommendations */}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 text-blue-700 dark:text-blue-300 border-b border-blue-200 dark:border-blue-700 pb-2">Recommendations</h3>
+                    <ul className="space-y-3">
+                      {notifications.filter(n => n.category === 'recommendation').map((notification) => (
+                        <NotificationItem key={notification.id} notification={notification} onDiscuss={onDiscussNotification} onAccept={onAcceptNotification} onReject={onRejectNotification} />
+                      ))}
+                      {notifications.filter(n => n.category === 'recommendation').length === 0 && (
+                        <p className="text-sm text-center text-blue-600 dark:text-blue-400 py-4 italic">No recommendations.</p>
+                      )}
+                    </ul>
+                  </div>
+
+                  {/* Column 3: Reviews */}
+                  <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg shadow-sm">
+                    <h3 className="text-lg font-semibold mb-4 text-purple-700 dark:text-purple-300 border-b border-purple-200 dark:border-purple-700 pb-2">Review</h3>
+                    <ul className="space-y-3">
+                      {notifications.filter(n => n.category === 'review').map((notification) => (
+                        <NotificationItem key={notification.id} notification={notification} onDiscuss={onDiscussNotification} onAccept={onAcceptNotification} onReject={onRejectNotification} />
+                      ))}
+                      {notifications.filter(n => n.category === 'review').length === 0 && (
+                        <p className="text-sm text-center text-purple-600 dark:text-purple-400 py-4 italic">Nothing to review.</p>
+                      )}
+                    </ul>
+                  </div>
+                </div>
               ) : (
-                <p className="text-sm text-center text-light-text-secondary dark:text-dark-text-secondary py-4">
-                  No new notifications.
+                <p className="text-base text-center text-light-text-secondary dark:text-dark-text-secondary py-10">
+                  Your notification center is empty.
                 </p>
               )}
             </div>
-            {/* Optional: Add 'Mark all as read' or other actions here */}
+            {/* Optional: Add Footer Actions? */}
           </div>
         </div>
       )}
     </>
+  );
+};
+
+// --- NotificationItem Component (Extracted for clarity) ---
+const NotificationItem = ({ notification, onDiscuss, onAccept, onReject }) => {
+  const IconComponent = notification.icon;
+  // Define base colors per category - can be expanded
+  const categoryColors = {
+    reminder: 'text-orange-600 dark:text-orange-400',
+    recommendation: 'text-blue-600 dark:text-blue-400',
+    review: 'text-purple-600 dark:text-purple-400',
+  };
+  const iconColor = categoryColors[notification.category] || 'text-gray-500 dark:text-gray-400';
+
+  return (
+    <li className="flex items-start justify-between p-3 rounded-md bg-light-surface dark:bg-dark-surface/70 border border-gray-200 dark:border-gray-600 shadow-sm">
+      <div className="flex items-start flex-grow mr-2">
+        <div className={`flex-shrink-0 w-6 h-6 mt-0.5 mr-3 flex items-center justify-center ${iconColor}`}>
+          {IconComponent ? <IconComponent size={18} /> : <FiBell size={18} />}{/* Fallback icon */}
+        </div>
+        <span className="text-sm text-light-text dark:text-dark-text">
+          {notification.text}
+        </span>
+      </div>
+      <div className="flex flex-shrink-0 space-x-1.5 mt-0.5">
+        {/* Discuss Button */}
+        <button 
+          onClick={() => onDiscuss(notification.text)}
+          className="p-1 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Discuss in Chat"
+          title="Discuss in Chat"
+        >
+          <FcComments size={18} /> 
+        </button>
+        {/* Accept Button */}
+        <button 
+          onClick={() => onAccept(notification.id)}
+          className="p-1 rounded-full text-green-500 hover:bg-green-100 dark:hover:bg-green-900/50 focus:outline-none focus:ring-2 focus:ring-green-500"
+          aria-label="Accept"
+          title="Accept"
+        >
+          <FiCheck size={18} />
+        </button>
+        {/* Reject Button */}
+        <button 
+          onClick={() => onReject(notification.id)}
+          className="p-1 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 focus:outline-none focus:ring-2 focus:ring-red-500"
+          aria-label="Reject"
+          title="Reject"
+        >
+          <FiX size={18} />
+        </button>
+      </div>
+    </li>
   );
 };
 

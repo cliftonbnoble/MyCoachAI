@@ -3,7 +3,7 @@ import Sidebar from '../Sidebar.jsx';
 import ChatInterface from '../ChatInterface.jsx';
 import AgentSelector from '../AgentSelector.jsx';
 import StudentSearch from '../student-search/StudentSearch.jsx';
-import { FiDollarSign, FiBriefcase, FiFileText } from 'react-icons/fi'; // Import icons for notifications
+import { FiDollarSign, FiBriefcase, FiFileText, FiCalendar, FiUsers, FiBookOpen, FiHelpCircle, FiAlertCircle } from 'react-icons/fi'; // Import icons for notifications
 
 const PortalLayout = ({ 
   portalType = 'student', // 'student' or 'staff'
@@ -23,9 +23,19 @@ const PortalLayout = ({
 
   // Notification State (Lifted)
   const [notifications, setNotifications] = useState([
-    { id: 1, text: 'Turn in financial aid application by Oct 31st.', icon: FiDollarSign },
-    { id: 2, text: 'Finish Resume/CV for job application.', icon: FiBriefcase },
-    { id: 3, text: 'Turn in transcripts by Nov 15th.', icon: FiFileText },
+    // Reminders (Tasks/Dates)
+    { id: 1, category: 'reminder', text: 'Turn in financial aid application by Oct 31st.', icon: FiDollarSign },
+    { id: 3, category: 'reminder', text: 'Turn in transcripts by Nov 15th.', icon: FiFileText },
+    { id: 4, category: 'reminder', text: 'Schedule meeting with advisor before registration opens.', icon: FiCalendar },
+
+    // Recommendations (AI Suggestions)
+    { id: 2, category: 'recommendation', text: 'Finish Resume/CV for job application based on your career goals.', icon: FiBriefcase },
+    { id: 5, category: 'recommendation', text: 'Explore the new campus clubs for networking opportunities.', icon: FiUsers },
+    { id: 6, category: 'recommendation', text: 'Review study resources for upcoming mid-term exam.', icon: FiBookOpen },
+
+    // Reviews (Follow-ups/Misc)
+    { id: 7, category: 'review', text: 'Follow up on library book hold request.', icon: FiHelpCircle },
+    { id: 8, category: 'review', text: 'Past due: Submit course feedback survey.', icon: FiAlertCircle }, // Use a different icon maybe
   ]);
   const notificationCount = notifications.length;
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
@@ -33,10 +43,25 @@ const PortalLayout = ({
   // Notification Handlers
   const handleAcceptNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+    // Optionally close panel if empty?
+    // if (notifications.length === 1) setIsNotificationPanelOpen(false);
   };
 
   const handleRejectNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+    // Optionally close panel if empty?
+    // if (notifications.length === 1) setIsNotificationPanelOpen(false);
+  };
+
+  // New handler to send notification text to chat
+  const handleDiscussNotification = (notificationText) => {
+    if (!notificationText) return;
+    // Close the notification panel
+    setIsNotificationPanelOpen(false);
+    // Send the text to the chat interface
+    handleSendMessage(notificationText);
+    // Remove the notification after discussing it (optional, based on desired behavior)
+    // setNotifications(prev => prev.filter(n => n.text !== notificationText)); // Be careful if text isn't unique
   };
 
   const handleToggleNotificationPanel = () => {
@@ -107,6 +132,7 @@ const PortalLayout = ({
         notifications={notifications}
         onAcceptNotification={handleAcceptNotification}
         onRejectNotification={handleRejectNotification}
+        onDiscussNotification={handleDiscussNotification}
         isNotificationPanelOpen={isNotificationPanelOpen}
         onToggleNotificationPanel={handleToggleNotificationPanel}
         {...sidebarConfig}

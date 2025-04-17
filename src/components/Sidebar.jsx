@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders, FiUsers, FiTarget, FiBell, FiDollarSign, FiBriefcase, FiFileText, FiCheck, FiX, FiMessageSquare } from 'react-icons/fi';
+import { FiChevronsLeft, FiChevronsRight, FiUser, FiMessageCircle, FiSettings, FiLogOut, FiPlus, FiSliders, FiUsers, FiTarget, FiBell, FiDollarSign, FiBriefcase, FiFileText, FiCheck, FiX, FiMessageSquare, FiCpu } from 'react-icons/fi';
 import { FcComments } from 'react-icons/fc';
 import ThemeToggle from './ThemeToggle.jsx';
 import CustomizeProfileModal from './CustomizeProfileModal.jsx';
 import { useNavigate } from 'react-router-dom';
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 /**
  * Sidebar component for both student and staff portals
@@ -426,6 +429,7 @@ const NotificationItem = ({ notification, onDiscuss, onAccept, onReject }) => {
 
 // --- PurposeBuilderModal Component Definition ---
 const PurposeBuilderModal = ({ isOpen, onClose }) => {
+  // Existing State
   const [year, setYear] = useState('');
   const [major, setMajor] = useState('');
   const [goals, setGoals] = useState('');
@@ -437,6 +441,43 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
     personal: false,
     financial: false,
   });
+  
+  // New State for additional fields
+  const [industry, setIndustry] = useState('');
+  const [func, setFunc] = useState(''); // Renamed from function to avoid keyword clash
+  const [location, setLocation] = useState('');
+  const [purposeStatement, setPurposeStatement] = useState('');
+  
+  // State for progress
+  const [progress, setProgress] = useState(0);
+
+  // Fields to track for progress calculation
+  const trackableFields = [
+    year, major, goals, interests, challenges, 
+    industry, func, location, purposeStatement
+  ];
+  const totalFields = trackableFields.length + Object.keys(areasOfFocus).length; // Count string fields + checkboxes
+
+  // Calculate progress on field changes
+  useEffect(() => {
+    let filledCount = 0;
+    // Count non-empty string fields
+    trackableFields.forEach(field => {
+      if (field && field.trim() !== '') {
+        filledCount++;
+      }
+    });
+    // Count checked boxes
+    Object.values(areasOfFocus).forEach(isChecked => {
+      if (isChecked) {
+        filledCount++;
+      }
+    });
+    
+    const newProgress = totalFields > 0 ? Math.round((filledCount / totalFields) * 100) : 0;
+    setProgress(newProgress);
+    
+  }, [year, major, goals, interests, challenges, industry, func, location, purposeStatement, areasOfFocus, totalFields]); // Recalculate when any field changes
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -444,8 +485,11 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
   };
 
   const handleSave = () => {
-    // Placeholder for save logic
-    console.log({ year, major, goals, interests, challenges, areasOfFocus });
+    // Include new fields in save logic
+    console.log({ 
+        year, major, goals, interests, challenges, areasOfFocus, 
+        industry, func, location, purposeStatement 
+    });
     onClose();
   };
 
@@ -454,23 +498,40 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity duration-300">
       <div className="bg-light-surface dark:bg-dark-surface rounded-lg shadow-xl w-full max-w-3xl p-8 transform transition-all scale-100 opacity-100 flex flex-col max-h-[90vh]">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
-          <h2 className="text-2xl font-semibold text-light-text dark:text-dark-text">Purpose Builder</h2>
-          <button 
+        {/* Header with Progress Bar */}
+        <div className="flex justify-between items-start mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+          <div>
+            <h2 className="text-2xl font-semibold text-light-text dark:text-dark-text">Purpose Builder</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Help us understand your goals to personalize your experience.</p>
+          </div>
+          {/* Progress Bar Area */}
+          <div className="w-32 flex flex-col items-end">
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Profile Completion</span>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+              <div 
+                className="bg-primary h-2.5 rounded-full transition-all duration-300 ease-out" 
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <span className="text-xs font-semibold text-primary mt-1">{progress}%</span>
+          </div>
+          {/* Close Button - Moved slightly for alignment */}
+          {/* <button 
             onClick={onClose}
-            className="p-1 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-1 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary absolute top-6 right-6"
             aria-label="Close"
           >
             <FiX size={24} />
-          </button>
+          </button> */} 
         </div>
 
         {/* Form Content - Scrollable */}
-        <div className="flex-grow overflow-y-auto custom-scrollbar px-8 space-y-8 mb-6">
+        <div className="flex-grow overflow-y-auto custom-scrollbar pr-6 pl-2 space-y-8 mb-6">
+          {/* --- Existing Fields --- */}
           {/* Year and Major */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-1">
+             {/* Year Select */} 
+             <div className="p-1">
               <label htmlFor="year" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Year</label>
               <div className="relative">
                 <select 
@@ -491,7 +552,8 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
             </div>
-            <div className="p-1">
+            {/* Major Select */}
+             <div className="p-1">
               <label htmlFor="major" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Major</label>
               <div className="relative">
                 <select 
@@ -515,10 +577,27 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Text Areas */}
+          {/* --- New Fields --- */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-1">
+              <label htmlFor="industry" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Target Industry (Optional)</label>
+              <Input id="industry" value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="e.g., Technology, Healthcare, Finance" />
+            </div>
+             <div className="p-1">
+              <label htmlFor="function" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Target Function (Optional)</label>
+              <Input id="function" value={func} onChange={(e) => setFunc(e.target.value)} placeholder="e.g., Software Engineer, Marketing, Analyst" />
+            </div>
+             <div className="p-1">
+              <label htmlFor="location" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Target Location (Optional)</label>
+              <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g., Remote, New York, London" />
+            </div>
+          </div>
+
+          {/* --- Existing Text Areas --- */}
+          {/* ... (Goals, Interests, Challenges Textareas remain the same) ... */} 
           <div className="p-1">
             <label htmlFor="goals" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">What are your main goals for this academic year?</label>
-            <textarea 
+            <Textarea 
               id="goals" 
               rows="3" 
               value={goals} 
@@ -529,7 +608,7 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
           </div>
           <div className="p-1">
             <label htmlFor="interests" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">What topics or activities are you passionate about?</label>
-            <textarea 
+            <Textarea 
               id="interests" 
               rows="3" 
               value={interests} 
@@ -540,7 +619,7 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
           </div>
           <div className="p-1">
             <label htmlFor="challenges" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">What challenges do you anticipate or currently face?</label>
-            <textarea 
+            <Textarea 
               id="challenges" 
               rows="3" 
               value={challenges} 
@@ -549,8 +628,28 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
               placeholder="e.g., time management, difficult coursework, financial concerns..."
             />
           </div>
-
-          {/* Areas of Focus */}
+          
+          {/* --- New Purpose Statement & AI Button --- */}
+           <div className="p-1">
+            <label htmlFor="purposeStatement" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Purpose Statement (Optional)</label>
+            <Textarea 
+              id="purposeStatement" 
+              rows="4" 
+              value={purposeStatement} 
+              onChange={(e) => setPurposeStatement(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:outline-none focus:border-primary"
+              placeholder="Summarize your core academic or career purpose in a few sentences..."
+            />
+          </div>
+          <div className="flex justify-center mt-2">
+            <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/10">
+              <FiCpu className="mr-2" size={16} />
+              Generate AI Insight (Coming Soon)
+            </Button>
+          </div>
+          
+          {/* --- Existing Areas of Focus --- */}
+          {/* ... (Areas of Focus checkboxes remain the same) ... */} 
           <div className="p-1">
             <label className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-3">Select your primary areas of focus:</label>
             <div className="grid grid-cols-2 gap-4">
@@ -570,7 +669,8 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Footer Buttons */}
+        {/* Footer Buttons (remain the same) */}
+        {/* ... */} 
         <div className="flex justify-end space-x-3 border-t border-gray-200 dark:border-gray-700 pt-4">
           <button 
             onClick={onClose}
@@ -585,10 +685,13 @@ const PurposeBuilderModal = ({ isOpen, onClose }) => {
             Save Purpose
           </button>
         </div>
+        {/* Need to add Input component if not already imported from shadcn */} 
+        {/* Need to add Textarea component if not already imported from shadcn */} 
+        {/* Need to add Button component if not already imported from shadcn */} 
+        {/* Need to add FiCpu icon if not already imported */} 
       </div>
     </div>
   );
 };
-// --- End PurposeBuilderModal Definition ---
 
 export default Sidebar; 

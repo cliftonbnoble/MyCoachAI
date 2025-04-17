@@ -32,13 +32,13 @@ const StudentSearch = ({ onClose }) => {
   // Handle student selection
   const handleStudentSelect = (student) => {
     // Filter API data to only include this student's data
-    const studentId = student.student_id_number;
+    const studentId = student.student_id;
     const filteredApiData = {};
     
     // Filter each endpoint's data for just this student
     Object.keys(apiData).forEach(endpoint => {
       if (apiData[endpoint] && Array.isArray(apiData[endpoint])) {
-        const studentData = apiData[endpoint].find(item => item.student_id_number === studentId);
+        const studentData = apiData[endpoint].find(item => item.student_id === studentId);
         filteredApiData[endpoint] = studentData || null;
       } else {
         filteredApiData[endpoint] = null;
@@ -106,16 +106,16 @@ const StudentSearch = ({ onClose }) => {
         
         // Create combined student records
         const combinedData = demographicData.map(demo => {
-          // Ensure we use student_id_number for joining
-          const joinKey = demo.student_id_number;
+          // Ensure we use student_id for joining
+          const joinKey = demo.student_id;
           
-          // Find matching academic record using student_id_number
-          const academic = academicData.find(a => a.student_id_number === joinKey);
+          // Find matching academic record using student_id
+          const academic = academicData.find(a => a.student_id === joinKey);
 
           // Create student record using directly observed field names
           return {
-            // Display the primary key used for joining
-            student_id_number: joinKey || 'N/A', 
+            // Use the new primary key
+            student_id: joinKey || 'N/A',
             first_name: demo.first_name || 'N/A',
             last_name: demo.last_name || 'N/A',
             // Access program_major directly, handle potential null/empty strings
@@ -143,7 +143,7 @@ const StudentSearch = ({ onClose }) => {
     } else {
       const lowercaseSearchTerm = searchTerm.toLowerCase();
       const filtered = students.filter(student => 
-        (student.student_id_number || '').toLowerCase().includes(lowercaseSearchTerm) ||
+        (student.student_id || '').toLowerCase().includes(lowercaseSearchTerm) ||
         (student.first_name || '').toLowerCase().includes(lowercaseSearchTerm) ||
         (student.last_name || '').toLowerCase().includes(lowercaseSearchTerm) ||
         (student.program_major || '').toLowerCase().includes(lowercaseSearchTerm)
@@ -236,11 +236,11 @@ const StudentSearch = ({ onClose }) => {
                   {filteredStudents.length > 0 ? (
                     filteredStudents.map((student) => (
                       <tr 
-                        key={student.student_id_number || `student-${Math.random()}`}
+                        key={student.student_id || `student-${Math.random()}`}
                         className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                         onClick={() => handleStudentSelect(student)}
                       >
-                        <td className="px-6 py-4 whitespace-nowrap">{student.student_id_number || 'N/A'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{student.student_id || 'N/A'}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{student.first_name || 'N/A'}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{student.last_name || 'N/A'}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{student.program_major || 'N/A'}</td>

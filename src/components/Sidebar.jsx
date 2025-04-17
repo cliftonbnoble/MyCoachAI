@@ -286,7 +286,8 @@ const Sidebar = ({
       {isCustomizeModalOpen && (
         <CustomizeProfileModal 
           isOpen={isCustomizeModalOpen} 
-          onClose={() => setIsCustomizeModalOpen(false)} 
+          onOpenChange={() => setIsCustomizeModalOpen(false)}
+          portalType={portalType}
         />
       )}
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { FiEdit, FiBookOpen, FiDollarSign, FiCalendar, FiClipboard, FiHelpCircle, FiUsers, FiFileText, FiDatabase, FiSettings } from 'react-icons/fi';
 import roboAgentLogo from '../assets/robo-agent-logo.png';
 import MessageInput from './MessageInput.jsx';
+import { defaultStudentPrompts, defaultStaffPrompts } from '../constants/agents';
 
 const ChatInterface = ({ 
   messages,
@@ -11,37 +12,31 @@ const ChatInterface = ({
   portalType = 'student',
   logoImage,
   notificationCount = 0,
-  onToggleNotificationPanel
+  onToggleNotificationPanel,
+  selectedAgent
 }) => {
   // Get user name based on portal type
   const userName = portalType === 'student' ? "John" : "Jane";
 
-  // Different prompts based on portal type
-  const examplePrompts = portalType === 'student' ? [
-    { text: "Create flashcards for my Biology exam", icon: FiBookOpen },
-    { text: "Help me budget for next semester", icon: FiDollarSign },
-    { text: "Explain the concept of photosynthesis", icon: FiHelpCircle },
-    { text: "Draft an email to my professor", icon: FiEdit },
-    { text: "Summarize this lecture transcript", icon: FiClipboard },
-    { text: "When is the deadline to drop a class?", icon: FiCalendar },
-  ] : [
-    { text: "Draft an email to a student's parents", icon: FiEdit },
-    { text: "Generate a report on class attendance", icon: FiFileText },
-    { text: "Review department budget forecast", icon: FiDollarSign },
-    { text: "Prepare meeting notes for faculty meeting", icon: FiClipboard },
-    { text: "Query student enrollment statistics", icon: FiDatabase },
-    { text: "Configure course schedule for next term", icon: FiSettings },
-  ];
+  // Determine current logo, subtitle, and prompts based on selected agent
+  const currentLogo = selectedAgent?.avatar || roboAgentLogo;
+  const currentSpecialty = selectedAgent?.specialty;
+  const defaultPrompts = portalType === 'student' ? defaultStudentPrompts : defaultStaffPrompts;
+  const currentPrompts = selectedAgent?.prompts || defaultPrompts;
 
   const handleExamplePrompt = (promptText) => {
     handleSendMessage(promptText);
   };
 
+  console.log("ChatInterface - Received selectedAgent:", selectedAgent);
+  console.log("ChatInterface - Determined currentPrompts:", currentPrompts);
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden w-full">
       <div className="flex-1 flex flex-col overflow-hidden relative">
         <div
-          className={`absolute inset-0 flex flex-col items-center justify-center text-center transition-opacity duration-500 ease-in-out p-4 ${hasChatStarted ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+          key={selectedAgent?.id || 'default'}
+          className={`absolute inset-0 flex flex-col items-center justify-center text-center transition-opacity duration-500 ease-in-out p-4 ${hasChatStarted ? 'opacity-0 pointer-events-none' : 'opacity-100 animate-fade-in'}`}
         >
           <div className="mb-8">
             <button 
@@ -51,9 +46,9 @@ const ChatInterface = ({
               aria-label={notificationCount > 0 ? `Open Notifications (${notificationCount})` : 'No new notifications'}
             >
               <img
-                src={roboAgentLogo}
-                alt="MyCoach Logo"
-                className="w-24 h-24 mb-6 rounded-lg shadow-md bg-gray-200 dark:bg-gray-700 p-2"
+                src={currentLogo}
+                alt={currentSpecialty ? `${currentSpecialty} Logo` : "MyCoach Logo"}
+                className="w-24 h-24 mb-6 rounded-lg shadow-md bg-gray-200 dark:bg-gray-700 p-2 transition-all duration-300 ease-in-out"
               />
               {notificationCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-sm font-bold text-white ring-2 ring-light-surface dark:ring-dark-bg">
@@ -65,14 +60,16 @@ const ChatInterface = ({
               Welcome Back, {userName}!
             </h1>
             <h2 className="text-xl text-gray-600 dark:text-gray-400">
-              {portalType === 'student' 
-                ? "How can I assist with your studies today?" 
-                : "How can I assist with your administrative tasks today?"}
+              {currentSpecialty
+                ? `How can I assist with your ${currentSpecialty.replace(' Agent', '').toLowerCase()} tasks today?`
+                : portalType === 'student' 
+                  ? "How can I assist with your studies today?" 
+                  : "How can I assist with your administrative tasks today?"}
             </h2>
           </div>
           <div className="w-full px-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {examplePrompts.map((prompt, index) => (
+              {currentPrompts.map((prompt, index) => (
                 <button
                   key={index}
                   onClick={() => handleExamplePrompt(prompt.text)}

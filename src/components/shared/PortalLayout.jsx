@@ -40,6 +40,20 @@ const PortalLayout = ({
   const notificationCount = notifications.length;
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
 
+  // State for selected agent
+  const [selectedAgent, setSelectedAgent] = useState(null); // null = no agent selected
+
+  // Handler for agent selection
+  const handleAgentSelect = (agent) => {
+    // Only reset chat if a *different* agent is selected
+    if (selectedAgent?.id !== agent?.id) {
+      setMessages([]);
+      setHasChatStarted(false);
+      setIsAiTyping(false);
+    }
+    setSelectedAgent(agent); 
+  };
+
   // Notification Handlers
   const handleAcceptNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
@@ -113,6 +127,7 @@ const PortalLayout = ({
       setMessages([]);
       setHasChatStarted(false);
       setIsAiTyping(false);
+      setSelectedAgent(null); // Reset selected agent to show default view
   };
 
   // Student search toggle handler
@@ -148,7 +163,11 @@ const PortalLayout = ({
             <>
               {/* Agent Selector */}
               <div className={`mb-2 transition-opacity duration-300 ${showStudentSearch ? 'opacity-0' : 'opacity-100'}`}>
-                <AgentSelector portalType={portalType} />
+                <AgentSelector 
+                  portalType={portalType} 
+                  selectedAgent={selectedAgent} // Pass down selected agent state
+                  onAgentSelect={handleAgentSelect} // Pass down handler
+                />
               </div>
               {/* Chat Interface */}
               <ChatInterface 
@@ -160,6 +179,7 @@ const PortalLayout = ({
                 logoImage={logoImage}
                 notificationCount={notificationCount}
                 onToggleNotificationPanel={handleToggleNotificationPanel}
+                selectedAgent={selectedAgent} // Pass down selected agent state
               />
             </>
           )}

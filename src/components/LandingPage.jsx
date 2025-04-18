@@ -1,146 +1,115 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import roboAgentLogo from '../assets/robo-agent-logo.png';
-import largeRoboLogo from '../assets/large-robo-logo.png';
-import { FiArrowRight, FiCheckCircle } from 'react-icons/fi';
+// Removed largeRoboLogo, added imageHero with correct .jpg extension
+import imageHero from '../assets/image-hero.jpg'; 
+import { FiArrowRight, FiCheckCircle, FiZap, FiClock, FiUsers } from 'react-icons/fi'; // Adding relevant icons
 
 const LandingPage = () => {
-  const features = [
-    "AI-powered academic guidance",
-    "Study plan optimization",
-    "Document summarization",
-    "Course selection assistance",
-    "Career path recommendations",
-    "24/7 learning support"
+
+  // Simplified benefit statements inspired by popcorn.space
+  const keyBenefits = [
+    { icon: FiZap, text: "Instant AI Assistance" },
+    { icon: FiClock, text: "24/7 Academic Support" },
+    { icon: FiUsers, text: "Tools for Students & Staff" },
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-light-bg to-light-surface dark:from-gray-900 dark:to-gray-800 text-light-text dark:text-dark-text">
-      {/* Hero Section with Background Logo */}
-      <header className="pt-10 px-4 sm:px-6 lg:px-8 mb-16 md:mb-24 relative overflow-hidden">
-        {/* Large background logo */}
-        <div className="absolute right-0 top-0 w-full h-full flex justify-end items-center opacity-15 dark:opacity-20 pointer-events-none overflow-hidden">
+    // Main container: Clean white background
+    <div className="flex flex-col min-h-screen bg-white text-gray-800">
+
+      {/* Hero Section - Background Image Added */}
+      <header className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 text-center lg:text-left overflow-hidden">
+        {/* Background Image Container */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
           <img 
-            src={largeRoboLogo} 
-            alt="" 
-            className="w-[80%] max-w-none absolute -right-[5%] top-[35%] transform -translate-y-1/2"
-            aria-hidden="true"
-            style={{ minWidth: '600px' }}
+            src={imageHero} 
+            alt="Abstract background image representing AI and academics" 
+            className="absolute inset-0 w-full h-full object-cover opacity-80" // High opacity
           />
+          {/* Overlay for text contrast */}
+          <div className="absolute inset-0 bg-black/20"></div> 
         </div>
-        
-        {/* Gradient overlay to enhance text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-light-bg dark:from-gray-900 via-light-bg/90 dark:via-gray-900/90 to-transparent pointer-events-none"></div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between">
-            {/* Left side text */}
-            <div className="lg:w-1/2 pt-10">
-              <h2 className="text-xl font-medium text-primary mb-4">MyCoach AI</h2>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 leading-tight">
-                <span className="block">Academic AI</span>
-                <span className="block mt-1">at its finest.</span>
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-xl">
-                Supercharge your academic journey with personalized AI Agents. Get guidance, resources, reminders, and support 
-                whenever you need it.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-5">
-                <Link
-                  to="/student"
-                  className="px-8 py-4 bg-primary hover:bg-yellow-400 text-lg font-semibold text-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out flex items-center justify-center gap-2 group"
-                >
-                  Student Portal
-                  <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  to="/staff"
-                  className="px-8 py-4 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 text-lg font-semibold text-gray-800 dark:text-gray-200 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out text-center"
-                >
-                  Staff Portal
-                </Link>
-              </div>
-            </div>
-            
-            {/* Right side animated effect replacing the image box */}
-            <div className="lg:w-1/2 flex justify-center mb-10 lg:mb-0 mt-16 lg:mt-0">
-              {/* Animated Circle */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64">
-                <div className="absolute inset-0 rounded-full animate-pulse" style={{
-                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.2) 0%, rgba(250, 204, 21, 0) 70%)',
-                  animationDuration: '4s'
-                }} />
-                <div className="absolute inset-[15%] rounded-full animate-pulse" style={{
-                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.3) 0%, rgba(250, 204, 21, 0) 70%)',
-                  animationDuration: '3s',
-                  animationDelay: '0.5s'
-                }} />
-                <div className="absolute inset-[30%] rounded-full animate-pulse" style={{
-                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.4) 0%, rgba(250, 204, 21, 0) 70%)',
-                  animationDuration: '2s',
-                  animationDelay: '1s'
-                }} />
-                <div className="absolute inset-[45%] rounded-full animate-pulse" style={{
-                  background: 'radial-gradient(circle at center, rgba(250, 204, 21, 0.5) 0%, rgba(250, 204, 21, 0) 70%)',
-                  animationDuration: '1.5s',
-                  animationDelay: '1.5s'
-                }} />
-              </div>
-            </div>
+
+        {/* Text Content Container - Adjusted for large screens */}
+        <div className="max-w-3xl lg:max-w-xl mx-auto lg:mx-0 lg:pl-8 relative z-10">
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6 drop-shadow-lg">
+            Your AI Coach for Academic Success
+          </h1>
+          {/* Sub-headline */} 
+          <p className="text-lg sm:text-xl text-gray-100 mb-10 drop-shadow-md">
+            MyCoach AI provides personalized guidance and support for students and staff. Access your portal to get started.
+          </p>
+          
+          {/* Call to Action Buttons - Adjusted alignment for large screens */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <Link
+              to="/student"
+              className="inline-flex items-center justify-center px-8 py-3 bg-primary hover:bg-yellow-400 text-lg font-semibold text-gray-900 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out group"
+            >
+              Student Portal
+              <FiArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              to="/staff"
+              // Use a slightly lighter background for contrast if needed, or keep dark
+              className="inline-flex items-center justify-center px-8 py-3 bg-gray-800 hover:bg-gray-700 text-lg font-semibold text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out border border-gray-600 hover:border-gray-500"
+            >
+              Staff Portal
+            </Link>
           </div>
         </div>
       </header>
-      
-      {/* Features Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Lorem ipsum dolor sit amet</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
-                <div className="flex items-start gap-3">
-                  <FiCheckCircle className="mt-1 text-primary w-5 h-5 flex-shrink-0" />
-                  <p className="font-medium">{feature}</p>
-                </div>
+
+      {/* Key Benefits Section */} 
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 border-y border-gray-200">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            {keyBenefits.map((benefit, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <benefit.icon className="w-10 h-10 text-primary mb-4" />
+                <h3 className="text-lg font-semibold text-gray-800">{benefit.text}</h3>
               </div>
             ))}
           </div>
         </div>
       </section>
-      
-      {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6">Ready to transform your education?</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-10">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+      {/* Value Proposition Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">MyCoach AI: Simple, Smart Support</h2>
+          <p className="text-xl text-gray-600 mb-12">
+            Streamline your academic tasks and get the help you need, exactly when you need it. MyCoach is designed for the demands of university life.
           </p>
-          <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <button
-              className="px-8 py-4 bg-primary hover:bg-yellow-400 text-lg font-semibold text-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out flex items-center justify-center gap-2 group"
-              onClick={() => {}}
-            >
-              Get Started Now
-              <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </button>
+
+          {/* Simplified How it Works / Core Value Points */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+              <h3 className="font-semibold mb-2 text-gray-800">1. Access Your Portal</h3>
+              <p className="text-gray-600">Log in easily as a student or staff member.</p>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+              <h3 className="font-semibold mb-2 text-gray-800">2. Choose Your Agent</h3>
+              <p className="text-gray-600">Select the AI specialized for your task.</p>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+              <h3 className="font-semibold mb-2 text-gray-800">3. Start Interacting</h3>
+              <p className="text-gray-600">Get answers, summaries, plans, and more.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <footer className="py-8 px-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
+      {/* Footer Section - Cleaned up */}
+      <footer className="py-8 px-4 border-t border-gray-200 mt-auto bg-gray-100">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <img src={roboAgentLogo} alt="MyCoach Logo" className="w-8 h-8 mr-2" />
-            <span className="font-semibold">MyCoach AI</span>
+            <span className="font-semibold text-gray-800">MyCoach AI</span>
           </div>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+          <p className="text-gray-500 text-sm">
             © {new Date().getFullYear()} MyCoach AI. All rights reserved.
           </p>
         </div>

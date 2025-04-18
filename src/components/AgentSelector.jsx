@@ -68,12 +68,12 @@ const AgentSelector = ({ portalType = 'student', selectedAgent, onAgentSelect })
                 className={cn(
                   "flex-shrink-0 w-20 cursor-pointer group focus:outline-none rounded-lg",
                   "transition-all duration-300 ease-out", // Base transition
-                  // Apply base scale, selected scale, and hover scale (only if not selected)
+                  // Apply adjusted scales for more emphasis
                   isSelected 
-                    ? "scale-110" // Selected: Larger scale
+                    ? "scale-115" // Selected: Grow to 115%
                     : isHovered 
-                      ? "scale-100 translate-y-[-2px]" // Hovered (not selected): Normal scale + lift
-                      : "scale-95" // Default (not selected, not hovered): Smaller scale
+                      ? "scale-100 translate-y-[-2px]" // Hovered: Normal size + lift
+                      : "scale-95" // Default (not selected/hovered): Shrink slightly to 95%
                 )}
                 style={{ 
                   height: '100px',

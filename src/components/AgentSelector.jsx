@@ -46,40 +46,42 @@ const AgentSelector = ({ portalType = 'student', selectedAgent, onAgentSelect })
 
   return (
     <div className="w-full pb-4">
-      {/* Main container with fixed height to prevent layout shifts */}
-      <div className="flex justify-center overflow-hidden relative">
-        {/* Scroll container - isolated margin to prevent interaction with other elements */}
+      {/* Main container - REMOVED overflow-hidden */}
+      <div className="flex justify-center relative">
+        {/* Scroll container - ADDED overflow-y-visible */}
         <div 
-          className="flex items-center space-x-6 overflow-x-auto scrollbar-hide py-4 px-4 custom-scrollbar" 
+          className="flex items-center space-x-6 overflow-x-auto overflow-y-visible scrollbar-hide py-8 px-8 custom-scrollbar" 
           style={{ 
             maxWidth: '900px', 
-            minHeight: '110px',  // Ensure consistent height
-            isolation: 'isolate' // Isolate this container from others
+            minHeight: '140px' // Removed isolation: isolate
           }}
         >
           {agents.map((agent) => {
             const isHovered = hoveredAgentId === agent.id;
-            const isSelected = selectedAgent?.id === agent.id; // Check if this agent is selected
+            const isSelected = selectedAgent?.id === agent.id;
             
             return (
               // Use a button for accessibility
               <button 
                 key={agent.id} 
-                onClick={() => onAgentSelect(agent)} // Call handler on click
+                onClick={() => onAgentSelect(agent)} 
                 className={cn(
                   "flex-shrink-0 w-20 cursor-pointer group focus:outline-none rounded-lg",
                   "transition-all duration-300 ease-out", // Base transition
-                  isSelected ? "scale-105" : "scale-100", // Scale selected
-                  isHovered && !isSelected ? "translate-y-[-2px]" : "translate-y-0" // Hover effect if not selected
+                  // Apply base scale, selected scale, and hover scale (only if not selected)
+                  isSelected 
+                    ? "scale-110" // Selected: Larger scale
+                    : isHovered 
+                      ? "scale-100 translate-y-[-2px]" // Hovered (not selected): Normal scale + lift
+                      : "scale-95" // Default (not selected, not hovered): Smaller scale
                 )}
                 style={{ 
                   height: '100px',
-                  position: 'relative',
-                  isolation: 'isolate', // Each agent container is isolated
+                  position: 'relative' // Removed isolation: isolate
                 }}
                 onMouseEnter={() => setHoveredAgentId(agent.id)}
                 onMouseLeave={() => setHoveredAgentId(null)}
-                aria-pressed={isSelected} // Indicate selection state for accessibility
+                aria-pressed={isSelected} 
               >
                 {/* Centered content wrapper */}
                 <div className="flex flex-col items-center text-center">

@@ -136,7 +136,7 @@ const PortalLayout = ({
   };
 
   return (
-    <div className="flex h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text overflow-hidden">
+    <div className="flex h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
       {/* Sidebar */}
       <Sidebar 
         isOpen={isSidebarOpen} 

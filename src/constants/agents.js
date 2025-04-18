@@ -53,56 +53,17 @@ export const studentAgents = [
       { text: "When is the next career fair?", icon: FiCalendar },
     ]
   },
-  { 
-    id: 's4', 
-    specialty: 'Campus Agent', 
-    avatar: agent4,
-    prompts: [
-      { text: "Where is the library?", icon: FiMap },
-      { text: "What clubs can I join?", icon: FiUsers },
-      { text: "Find campus dining options", icon: FiMap },
-      { text: "When are the dorm quiet hours?", icon: FiCalendar },
-      { text: "How do I report a maintenance issue?", icon: FiPhone },
-      { text: "What events are happening this week?", icon: FiCalendar },
-    ]
-   },
-  { 
-    id: 's5', 
-    specialty: 'Schedule Agent', 
-    avatar: agent5,
-    prompts: [
-        { text: "Help me build my class schedule", icon: FiEdit },
-        { text: "When does course registration open?", icon: FiCalendar },
-        { text: "Find available sections for MATH 101", icon: FiClipboard },
-        { text: "Explain prerequisites for CS 201", icon: FiHelpCircle },
-        { text: "Add a reminder for my registration time", icon: FiCalendar },
-        { text: "How do I drop a class?", icon: FiHelpCircle },
-    ]
-   },
-  { 
-    id: 's6', 
-    specialty: 'Classes Agent', 
-    avatar: agent6,
-    prompts: [
-        { text: "Summarize my lecture notes on [Topic]", icon: FiClipboard },
-        { text: "Create flashcards for my Biology exam", icon: FiBookOpen },
-        { text: "Explain the concept of [Concept]", icon: FiHelpCircle },
-        { text: "Help me draft an email to my professor", icon: FiEdit },
-        { text: "Find study groups for [Course]", icon: FiUsers },
-        { text: "What are the professor's office hours?", icon: FiCalendar },
-    ]
-  },
-  { 
+  {
     id: 's7', 
-    specialty: 'Academic Agent', 
+    specialty: 'Student Agent',
     avatar: agent7,
     prompts: [
         { text: "What are the requirements for my major?", icon: FiBookOpen },
-        { text: "Check my degree progress report", icon: FiFileText },
-        { text: "Explain the academic probation policy", icon: FiHelpCircle },
+        { text: "Help me build my class schedule", icon: FiEdit },
+        { text: "Summarize my lecture notes on [Topic]", icon: FiClipboard },
+        { text: "Where is the library?", icon: FiMap },
         { text: "Find tutoring services for chemistry", icon: FiUsers },
-        { text: "Help me choose a minor", icon: FiEdit },
-        { text: "When is the deadline to declare a major?", icon: FiCalendar },
+        { text: "What events are happening this week?", icon: FiCalendar },
     ]
    },
   { 
@@ -121,19 +82,6 @@ export const studentAgents = [
 ];
 
 export const staffAgents = [
-  { 
-    id: 'f1', 
-    specialty: 'Records Agent', 
-    avatar: agent1,
-    prompts: [
-      { text: "Lookup student transcript for ID [ID]", icon: FiFileText },
-      { text: "Verify enrollment status for [Student Name]", icon: FiClipboard },
-      { text: "Generate a list of students on probation", icon: FiFileText },
-      { text: "Find courses taught by [Professor Name]", icon: FiBookOpen },
-      { text: "Check degree requirements for [Major]", icon: FiBookOpen },
-      { text: "Process a grade change request form", icon: FiEdit },
-    ]
-  },
   { 
     id: 'f2', 
     specialty: 'Admissions Agent', 
@@ -160,43 +108,30 @@ export const staffAgents = [
       { text: "Process a time-off request", icon: FiClipboard },
     ]
   },
-  { 
+  {
     id: 'f4', 
-    specialty: 'Budget Agent', 
+    specialty: 'Analytics Agent',
     avatar: agent4,
     prompts: [
       { text: "Generate departmental budget report", icon: FiFileText },
+      { text: "Lookup student transcript by Student ID", icon: FiFileText },
+      { text: "Generate enrollment statistics report", icon: FiDatabase },
       { text: "Compare expenses year-over-year", icon: FiDatabase },
-      { text: "Draft a budget proposal justification", icon: FiEdit },
-      { text: "Find vendor payment status", icon: FiDollarSign },
-      { text: "Explain the purchase order process", icon: FiHelpCircle },
-      { text: "Forecast remaining funds for Q4", icon: FiCalendar },
+      { text: "Analyze student success metrics by major", icon: FiFileText },
+      { text: "Process a grade change request form", icon: FiEdit },
     ]
   },
-   { 
-    id: 'f5', 
-    specialty: 'Admin Agent', 
-    avatar: agent5,
-    prompts: [
-        { text: "Draft an email to student parents", icon: FiEdit },
-        { text: "Prepare meeting notes for faculty meeting", icon: FiClipboard },
-        { text: "Find contact info for [Department Head]", icon: FiPhone },
-        { text: "Summarize the new campus policy", icon: FiFileText },
-        { text: "Schedule a committee meeting", icon: FiCalendar },
-        { text: "Order office supplies", icon: FiSettings },
-    ]
-  },
-  { 
+  {
     id: 'f6', 
     specialty: 'Faculty Agent', 
     avatar: agent6,
     prompts: [
         { text: "Generate class roster for [Course Code]", icon: FiFileText },
         { text: "Draft syllabus template", icon: FiEdit },
-        { text: "Find resources for [Teaching Method]", icon: FiBookOpen },
-        { text: "Submit final grades", icon: FiClipboard },
+        { text: "Prepare meeting notes for faculty meeting", icon: FiClipboard },
+        { text: "Remind me to submit final grades by [Date]", icon: FiClipboard },
+        { text: "Find contact info for Department members", icon: FiPhone },
         { text: "Check classroom technology availability", icon: FiSettings },
-        { text: "Lookup faculty development workshops", icon: FiCalendar },
     ]
   },
   { 
@@ -210,19 +145,6 @@ export const staffAgents = [
         { text: "Check server status", icon: FiDatabase },
         { text: "Order new hardware for [User]", icon: FiSettings },
         { text: "Explain cybersecurity best practices", icon: FiShield },
-    ]
-  },
-  { 
-    id: 'f8', 
-    specialty: 'Analytics Agent', 
-    avatar: agent8,
-    prompts: [
-        { text: "Generate enrollment statistics report", icon: FiDatabase },
-        { text: "Analyze student success metrics by major", icon: FiFileText },
-        { text: "Visualize course demand trends", icon: FiClipboard },
-        { text: "Compare retention rates year-over-year", icon: FiDatabase },
-        { text: "Draft summary of key institutional metrics", icon: FiEdit },
-        { text: "Identify factors correlating with GPA", icon: FiHelpCircle },
     ]
   },
 ];

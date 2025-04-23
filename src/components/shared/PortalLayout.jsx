@@ -6,6 +6,7 @@ import StudentSearch from '../student-search/StudentSearch.jsx';
 import { FiDollarSign, FiBriefcase, FiFileText, FiCalendar, FiUsers, FiBookOpen, FiHelpCircle, FiAlertCircle } from 'react-icons/fi'; // Import icons for notifications
 // Import the Gemini API function
 import { fetchGeminiResponse } from '../../utils/geminiApi'; 
+import roboAgentLogo from '../../assets/robo-agent-logo.png'; // Import default logo
 
 const PortalLayout = ({ 
   portalType = 'student', // 'student' or 'staff'
@@ -102,21 +103,28 @@ const PortalLayout = ({
 
   // User message handler - REWRITTEN for Gemini API
   const handleSendMessage = async (text) => {
-    if (!text || text.trim() === '' || !selectedAgent) return; // Ensure agent is selected
+    // Allow sending message even if no agent is selected
+    if (!text || text.trim() === '') return;
+
+    // Determine current agent details or use defaults
+    const currentAgent = selectedAgent || {
+      id: 'default', // Use a default ID
+      avatar: roboAgentLogo, // Use the imported default logo
+      specialty: 'General Assistant' // Default specialty for prompt
+    };
 
     const userMessage = {
         id: `user-${nextId}`, 
         sender: 'user',
         text: text.trim(),
         timestamp: new Date(),
-        agentId: selectedAgent.id, // Link message to agent
-        icon: null, // Or add user avatar logic if available
+        agentId: currentAgent.id, // Use current agent's ID
+        icon: null, 
     };
     
-    // Use functional update to ensure we have the latest state
     setMessages(prevMessages => [...prevMessages, userMessage]);
     const currentNextId = nextId + 1;
-    setNextId(currentNextId); // Increment ID for next message
+    setNextId(currentNextId); 
 
     if (!hasChatStarted) {
         setHasChatStarted(true);
@@ -127,58 +135,57 @@ const PortalLayout = ({
     const loadingMessage = {
         id: loadingMessageId,
         sender: 'assistant',
-        text: '...', // Simple text indicator
+        text: '...', 
         isLoading: true,
         timestamp: new Date(),
-        agentId: selectedAgent.id,
-        icon: selectedAgent.avatar, // Use agent avatar
+        agentId: currentAgent.id, // Use current agent's ID
+        icon: currentAgent.avatar, // Use current agent's avatar
     };
     setMessages(prevMessages => [...prevMessages, loadingMessage]);
-    setNextId(currentNextId + 1); // Increment ID again
+    setNextId(currentNextId + 1); 
 
     // Fetch the actual response from Gemini
     try {
-        // Construct a prompt including agent context
-        const prompt = `You are the ${selectedAgent.specialty}. Respond to the user accordingly.
-User: ${text.trim()}
-Assistant:`;
-        const aiResponseText = await fetchGeminiResponse(prompt); // Call the API function
+        // Construct the prompt based on whether an agent is selected
+        const prompt = selectedAgent 
+          ? `You are the ${currentAgent.specialty}. Respond to the user accordingly.\nUser: ${text.trim()}\nAssistant:`
+          : `User: ${text.trim()}\nAssistant:`; // Simpler prompt if no agent
+          
+        const aiResponseText = await fetchGeminiResponse(prompt); 
 
         const aiMessage = {
-            id: `ai-${currentNextId + 1}`, // Use incremented ID
+            id: `ai-${currentNextId + 1}`, 
             sender: 'assistant',
             text: aiResponseText,
             timestamp: new Date(),
-            agentId: selectedAgent.id,
-            icon: selectedAgent.avatar, // Use agent avatar
+            agentId: currentAgent.id, // Use current agent's ID
+            icon: currentAgent.avatar, // Use current agent's avatar
         };
 
-        // Replace loading message with the actual response
         setMessages(prevMessages =>
             prevMessages.map(msg =>
                 msg.id === loadingMessageId ? aiMessage : msg
             )
         );
-        setNextId(currentNextId + 2); // Final ID increment
+        setNextId(currentNextId + 2); 
 
     } catch (error) {
          console.error("Error in handleSendMessage calling Gemini API:", error);
          const errorMessage = {
-             id: `err-${currentNextId + 1}`, // Use incremented ID
+             id: `err-${currentNextId + 1}`, 
              sender: 'assistant',
              text: "Sorry, something went wrong while getting my response.",
              isError: true,
              timestamp: new Date(),
-             agentId: selectedAgent.id,
-             icon: selectedAgent.avatar, // Use agent avatar
+             agentId: currentAgent.id, // Use current agent's ID
+             icon: currentAgent.avatar, // Use current agent's avatar
          };
-         // Replace loading message with an error message
          setMessages(prevMessages =>
              prevMessages.map(msg =>
                  msg.id === loadingMessageId ? errorMessage : msg
              )
          );
-         setNextId(currentNextId + 2); // Final ID increment
+         setNextId(currentNextId + 2); 
     }
   };
 

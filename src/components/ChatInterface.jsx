@@ -33,12 +33,12 @@ const ChatInterface = ({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden w-full">
-      <div className="flex-1 flex flex-col overflow-hidden relative">
+      <div className="flex-1 flex flex-col overflow-hidden relative mb-2">
         <div
           key={selectedAgent?.id || 'default'}
           className={`absolute inset-0 flex flex-col items-center justify-center text-center transition-opacity duration-500 ease-in-out p-4 ${hasChatStarted ? 'opacity-0 pointer-events-none' : 'opacity-100 animate-fade-in'}`}
         >
-          <div className="mb-8">
+          <div className="mb-4">
             <button 
               onClick={onToggleNotificationPanel}
               disabled={notificationCount === 0}
@@ -84,9 +84,9 @@ const ChatInterface = ({
         </div>
 
         <div
-          className={`flex-1 overflow-y-auto p-3 bg-light-surface dark:bg-dark-surface rounded-lg shadow custom-scrollbar flex flex-col transition-opacity duration-500 ease-in-out ${hasChatStarted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`flex-1 overflow-y-auto px-4 pb-4 bg-light-surface dark:bg-dark-surface rounded-lg shadow custom-scrollbar flex flex-col transition-opacity duration-500 ease-in-out ${hasChatStarted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
-          <div className="space-y-4 w-full">
+          <div className="space-y-4 w-full max-w-full px-2">
             {hasChatStarted && (
               <div className="flex items-center mb-4">
                 <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">
@@ -101,23 +101,23 @@ const ChatInterface = ({
                 className={`flex items-end gap-2 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {message.sender === 'ai' && message.icon && (
-                  <img src={message.icon} alt="AI Agent" className="w-8 h-8 rounded-full" />
+                  <img src={message.icon} alt="AI Agent" className="w-8 h-8 rounded-full self-end" />
                 )}
                 <div
-                  className={`max-w-lg p-3 shadow-sm whitespace-pre-wrap ${message.sender === 'user'
-                    ? 'bg-primary text-gray-900 rounded-t-lg rounded-bl-lg'
-                    : 'bg-gray-200 dark:bg-gray-700 text-light-text dark:text-dark-text rounded-t-lg rounded-br-lg'
+                  className={`max-w-[80%] p-3 shadow-sm whitespace-pre-wrap break-words ${message.sender === 'user'
+                    ? 'bg-primary text-gray-900 rounded-2xl rounded-br-lg'
+                    : 'bg-gray-200 dark:bg-gray-700 text-light-text dark:text-dark-text rounded-2xl rounded-bl-lg'
                   }`}
                 >
                   {message.text}
                 </div>
-                {message.sender === 'user' && <div className="w-8"></div>}
+                {message.sender === 'user' && <div className="w-8 flex-shrink-0"></div>}
               </div>
             ))}
             {isAiTyping && (
               <div className="flex items-end gap-2 justify-start">
-                <img src={roboAgentLogo} alt="AI Agent" className="w-8 h-8 rounded-full" />
-                <div className="max-w-lg p-3 shadow-sm rounded-t-lg rounded-br-lg bg-gray-200 dark:bg-gray-700">
+                <img src={roboAgentLogo} alt="AI Agent" className="w-8 h-8 rounded-full self-end" />
+                <div className="max-w-[80%] p-3 shadow-sm rounded-2xl rounded-bl-lg bg-gray-200 dark:bg-gray-700">
                   <div className="flex space-x-1">
                     <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-0"></span>
                     <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-150"></span>

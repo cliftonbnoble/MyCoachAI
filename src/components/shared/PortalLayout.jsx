@@ -4,10 +4,12 @@ import ChatInterface from '../ChatInterface.jsx';
 import AgentSelector from '../AgentSelector.jsx';
 import StudentSearch from '../student-search/StudentSearch.jsx';
 import { FiDollarSign, FiBriefcase, FiFileText, FiCalendar, FiUsers, FiBookOpen, FiHelpCircle, FiAlertCircle } from 'react-icons/fi'; // Import icons for notifications
+// Import the Gemini API function
+import { fetchGeminiResponse } from '../../utils/geminiApi'; 
 
 const PortalLayout = ({ 
   portalType = 'student', // 'student' or 'staff'
-  responseGenerator, 
+  // responseGenerator, // No longer needed for direct Gemini call
   logoImage,
   sidebarConfig = {}
 }) => {
@@ -19,7 +21,8 @@ const PortalLayout = ({
   const [hasChatStarted, setHasChatStarted] = useState(false);
   const [messages, setMessages] = useState([]); 
   const [nextId, setNextId] = useState(1); 
-  const [isAiTyping, setIsAiTyping] = useState(false);
+  // isAiTyping state might be replaced by the loading message logic
+  // const [isAiTyping, setIsAiTyping] = useState(false);
 
   // Notification State (Lifted)
   const [notifications, setNotifications] = useState([
@@ -49,7 +52,7 @@ const PortalLayout = ({
     if (selectedAgent?.id !== agent?.id) {
       setMessages([]);
       setHasChatStarted(false);
-      setIsAiTyping(false);
+      // setIsAiTyping(false);
     }
     setSelectedAgent(agent); 
   };
@@ -87,35 +90,96 @@ const PortalLayout = ({
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Message handling
-  const addMessage = (sender, text, icon = null) => {
-    const newMessage = { id: nextId, sender, text, icon };
-    setMessages(prevMessages => [...prevMessages, newMessage]);
-    setNextId(prevId => prevId + 1);
-  };
+  // Message handling - Simplified addMessage, maybe keep original if complex logic exists
+  // const addMessage = (sender, text, icon = null, isLoading = false, isError = false) => {
+  //   const newMessage = { id: `${sender}-${nextId}`, sender, text, icon, timestamp: new Date(), agentId: selectedAgent?.id, isLoading, isError }; // Add necessary fields
+  //   setMessages(prevMessages => [...prevMessages, newMessage]);
+  //   setNextId(prevId => prevId + 1);
+  // };
 
-  // AI response generator
-  const triggerAiResponse = () => {
-    setIsAiTyping(true); 
-    responseGenerator()
-      .then(responseText => {
-        addMessage('ai', responseText, logoImage);
-        setIsAiTyping(false);
-      })
-      .catch(() => {
-        addMessage('ai', 'Sorry, I encountered an error processing your request.', logoImage);
-        setIsAiTyping(false);
-      });
-  };
+  // AI response generator - No longer directly called by handleSendMessage
+  // const triggerAiResponse = () => { ... }; // Comment out or remove
 
-  // User message handler
-  const handleSendMessage = (text) => {
-     if (!text || text.trim() === '') return;
-     if (!hasChatStarted) {
+  // User message handler - REWRITTEN for Gemini API
+  const handleSendMessage = async (text) => {
+    if (!text || text.trim() === '' || !selectedAgent) return; // Ensure agent is selected
+
+    const userMessage = {
+        id: `user-${nextId}`, 
+        sender: 'user',
+        text: text.trim(),
+        timestamp: new Date(),
+        agentId: selectedAgent.id, // Link message to agent
+        icon: null, // Or add user avatar logic if available
+    };
+    
+    // Use functional update to ensure we have the latest state
+    setMessages(prevMessages => [...prevMessages, userMessage]);
+    const currentNextId = nextId + 1;
+    setNextId(currentNextId); // Increment ID for next message
+
+    if (!hasChatStarted) {
         setHasChatStarted(true);
-     }
-     addMessage('user', text);
-     triggerAiResponse();
+    }
+
+    // Add a loading indicator message
+    const loadingMessageId = `ai-loading-${currentNextId}`;
+    const loadingMessage = {
+        id: loadingMessageId,
+        sender: 'assistant',
+        text: '...', // Simple text indicator
+        isLoading: true,
+        timestamp: new Date(),
+        agentId: selectedAgent.id,
+        icon: selectedAgent.avatar, // Use agent avatar
+    };
+    setMessages(prevMessages => [...prevMessages, loadingMessage]);
+    setNextId(currentNextId + 1); // Increment ID again
+
+    // Fetch the actual response from Gemini
+    try {
+        // Construct a prompt including agent context
+        const prompt = `You are the ${selectedAgent.specialty}. Respond to the user accordingly.
+User: ${text.trim()}
+Assistant:`;
+        const aiResponseText = await fetchGeminiResponse(prompt); // Call the API function
+
+        const aiMessage = {
+            id: `ai-${currentNextId + 1}`, // Use incremented ID
+            sender: 'assistant',
+            text: aiResponseText,
+            timestamp: new Date(),
+            agentId: selectedAgent.id,
+            icon: selectedAgent.avatar, // Use agent avatar
+        };
+
+        // Replace loading message with the actual response
+        setMessages(prevMessages =>
+            prevMessages.map(msg =>
+                msg.id === loadingMessageId ? aiMessage : msg
+            )
+        );
+        setNextId(currentNextId + 2); // Final ID increment
+
+    } catch (error) {
+         console.error("Error in handleSendMessage calling Gemini API:", error);
+         const errorMessage = {
+             id: `err-${currentNextId + 1}`, // Use incremented ID
+             sender: 'assistant',
+             text: "Sorry, something went wrong while getting my response.",
+             isError: true,
+             timestamp: new Date(),
+             agentId: selectedAgent.id,
+             icon: selectedAgent.avatar, // Use agent avatar
+         };
+         // Replace loading message with an error message
+         setMessages(prevMessages =>
+             prevMessages.map(msg =>
+                 msg.id === loadingMessageId ? errorMessage : msg
+             )
+         );
+         setNextId(currentNextId + 2); // Final ID increment
+    }
   };
 
   // New chat handler - resets chat and exits student search if active
@@ -126,7 +190,7 @@ const PortalLayout = ({
       
       setMessages([]);
       setHasChatStarted(false);
-      setIsAiTyping(false);
+      // setIsAiTyping(false);
       setSelectedAgent(null); // Reset selected agent to show default view
   };
 
@@ -173,13 +237,13 @@ const PortalLayout = ({
               <ChatInterface 
                 messages={messages}
                 hasChatStarted={hasChatStarted}
-                isAiTyping={isAiTyping}
+                // isAiTyping={isAiTyping} // Remove if using loading message only
                 handleSendMessage={handleSendMessage}
                 portalType={portalType}
-                logoImage={logoImage}
+                logoImage={logoImage} // Maybe remove if agent avatar is used
                 notificationCount={notificationCount}
                 onToggleNotificationPanel={handleToggleNotificationPanel}
-                selectedAgent={selectedAgent} // Pass down selected agent state
+                selectedAgent={selectedAgent}
               />
             </>
           )}

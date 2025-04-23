@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FiEdit, FiBookOpen, FiDollarSign, FiCalendar, FiClipboard, FiHelpCircle, FiUsers, FiFileText, FiDatabase, FiSettings } from 'react-icons/fi';
 import roboAgentLogo from '../assets/robo-agent-logo.png';
 import MessageInput from './MessageInput.jsx';
@@ -30,6 +30,16 @@ const ChatInterface = ({
 
   console.log("ChatInterface - Received selectedAgent:", selectedAgent);
   console.log("ChatInterface - Determined currentPrompts:", currentPrompts);
+
+  // Ref for the scrollable messages container
+  const messagesContainerRef = useRef(null);
+
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden w-full">
@@ -84,9 +94,10 @@ const ChatInterface = ({
         </div>
 
         <div
+          ref={messagesContainerRef}
           className={`flex-1 overflow-y-auto px-4 pb-4 bg-light-surface dark:bg-dark-surface rounded-lg shadow custom-scrollbar flex flex-col transition-opacity duration-500 ease-in-out ${hasChatStarted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
-          <div className="space-y-4 w-full max-w-full px-2">
+          <div className="space-y-4 w-full max-w-full px-2 mt-auto">
             {hasChatStarted && (
               <div className="flex items-center mb-4">
                 <span className="font-semibold text-lg text-light-text dark:text-dark-text mr-2">

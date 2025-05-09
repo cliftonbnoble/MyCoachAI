@@ -4,8 +4,8 @@
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // Define the system instruction
-    const systemInstruction = {
+    // Define the system instruction for the Student Portal
+    const studentSystemInstruction = {
       role: "system",
       parts: [{text: `You are MyCoach AI, the most useful AI for students who can help with finance issues, career, studying, mental and physical health and information about the school. You are eager to help and love staying engaged.
 
@@ -21,17 +21,26 @@ General: {"student_id":"S0001","username":"jdoe","enrollment_date":"2022-08-15T0
 `}]
     };
 
-    // Choose a model and apply the system instruction
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-      systemInstruction: systemInstruction,
-    });
+    // Define the system instruction for the Staff Portal
+    const staffSystemInstruction = {
+      role: "system",
+      parts: [{text: `You are MyCoach AI, assisting staff members. You can help with student information, administrative tasks, and general school-related queries. You are eager to help and love staying engaged.`}]
+    };
 
-    export async function fetchGeminiResponse(prompt) {
+    export async function fetchGeminiResponse(prompt, portalType = 'student') { // Default to 'student'
       if (!apiKey) {
           console.error("Gemini API key not found. Make sure VITE_GEMINI_API_KEY is set in your .env file.");
           return "Error: API key not configured."; // Or throw an error
       }
+
+      const selectedSystemInstruction = portalType === 'staff' ? staffSystemInstruction : studentSystemInstruction;
+
+      // Choose a model and apply the system instruction
+      const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
+        systemInstruction: selectedSystemInstruction,
+      });
+
       try {
           // For simple text generation
           const result = await model.generateContent(prompt);

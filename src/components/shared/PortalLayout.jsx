@@ -151,7 +151,7 @@ const PortalLayout = ({
           ? `You are the ${currentAgent.specialty}. Respond to the user accordingly.\nUser: ${text.trim()}\nAssistant:`
           : `User: ${text.trim()}\nAssistant:`; // Simpler prompt if no agent
           
-        const aiResponseText = await fetchGeminiResponse(prompt); 
+        const aiResponseText = await fetchGeminiResponse(prompt, portalType); 
 
         const aiMessage = {
             id: `ai-${currentNextId + 1}`, 
